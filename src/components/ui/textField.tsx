@@ -1,4 +1,4 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { View, TextInput, TextInputProps, Text } from "react-native";
 
@@ -15,7 +15,7 @@ export default function TextField ({label, errorText, icon} : Props){
             <View>
                 {!! icon && (
                     <View>
-                        <FontAwesome6 name={icon} size={18} color="purple" />
+                        <FontAwesome5 name={icon} size={18} color="purple" />
                     </View>
                 )}
                 <TextInput
