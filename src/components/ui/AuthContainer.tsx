@@ -1,31 +1,31 @@
-import { FontAwesome5 } from "@expo/vector-icons"
+import { FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { global } from "./style";
+import { global } from "./styles";
 
 type Props = {
-    title: string;
-    subtitle?: string;
-    icon?: keyof typeof FontAwesome5.glyphMap;
-    // children: React.ReactNode;
+   title: string;
+   subtitle?: string;
+   icon?: keyof typeof FontAwesome6.glyphMap;
+   children: React.ReactNode;
 }
 
-export default function AuthContainer({title, subtitle, icon, /*children*/}: Props) {
-    return (
-        <SafeAreaView style={global.safeArea}>
-            <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : "height"} style={global.keyboardAvoid}>
-                <ScrollView style={global.container}>
-                    <View style={global.header}>
-                        {!!icon && <FontAwesome5 name={icon} size={25} color="#4b0505" style={global.hotelIcon}/>} 
-                        <Text style={global.title}>{title}</Text>
-                        {!!subtitle && <Text style={global.subTitle}>{subtitle}</Text>}
-                    </View>
-                    <View style={global.content}>
-
-                    </View>
-                </ScrollView>
-            </KeyboardAvoidingView>
-        </SafeAreaView>
-    );
+export function AuthContainer({ title, subtitle, icon, children }: Props) {
+  return (
+    <SafeAreaView style={global.safeArea}>
+    <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={global.keyboardAvoiding}>
+      <ScrollView contentContainerStyle={global.container}>
+        <View style={global.header}>
+          {!!icon && <FontAwesome6 name={icon} size={30} color="#6a1b9a" />}
+          <Text style={global.title}>{title}</Text>
+          {!!subtitle && <Text style={global.subtitle}>{subtitle}</Text>}
+        </View>
+        <View style={global.content}>
+        { children }
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
+    </SafeAreaView>
+  );
 }
