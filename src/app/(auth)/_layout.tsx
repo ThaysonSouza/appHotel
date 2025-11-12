@@ -6,7 +6,7 @@ replace(): subtitui a tela atual pela próxima */
 
 import { Stack } from "expo-router";
 
-export default function Authlayout(){
+const Authlayout = () => {
     return(
         <Stack screenOptions={{headerShown: false}}>
             <Stack.Screen name="index" options={{title: "login"}} />
@@ -15,3 +15,5 @@ export default function Authlayout(){
         </Stack>
     )
 }
+
+export default Authlayout;

@@ -11,7 +11,7 @@ type Props = {
    children: React.ReactNode;
 }
 
-export function AuthContainer({ title, subtitle, icon, children }: Props) {
+const AuthContainer = ({ title, subtitle, icon, children }: Props) => {
   return (
     <SafeAreaView style={global.safeArea}>
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={global.keyboardAvoiding}>
@@ -29,3 +29,5 @@ export function AuthContainer({ title, subtitle, icon, children }: Props) {
     </SafeAreaView>
   );
 }
+
+export default AuthContainer;

@@ -1,7 +1,7 @@
-import {TextField} from "../ui/TextField";
-import { AuthContainer } from "../ui/AuthContainer";
+import TextField from "../ui/TextField";
+import AuthContainer from "../ui/AuthContainer";
 
-export function RenderLogin() {
+const RenderLogin = () => {
     return (
         <AuthContainer
             title="Bem-vindo"
@@ -15,4 +15,6 @@ export function RenderLogin() {
         
         </AuthContainer>
     )
-}
+};
+
+export default RenderLogin;
