@@ -37,13 +37,13 @@ export const global = StyleSheet.create({
     },
 
     //inputs
-    inputGrup: {
+    inputGroup: {
         marginBottom: height * 0.02
     },
     label: {
-        fontSize: 14,
+        fontSize: 17,
         fontWeight: "600",
-        color: "#000",
+        color: "#070707ff",
         marginBottom: height * 0.01
     },
     inputIcon: {
@@ -60,14 +60,33 @@ export const global = StyleSheet.create({
     },
     input: {
         flex: 1,
-        fontSize: 15,
+        fontSize: 17,
         color: "#000",
         fontWeight: "600",
         paddingHorizontal: width * 0.02    
-    }, 
+    },
+    eyeIcon: {
+        position: "absolute",
+        right: 12,
+        top: 45
+    },
     errorText: {
         color: "red",
-        fontSize: 12,
+        fontSize: 15,
         marginTop: height * 0.01
+    },
+    primaryButton: {
+        backgroundColor: "#6a1b9a",
+        borderRadius: 10,
+        padding: width * 0.025,
+        alignItems: "center"
+    },
+    primaryButtonDisabled:{
+        backgroundColor: "#9ca3af"
+
+    },
+    primaryButtonText: {
+        color: "#fff",
+        fontWeight: "600",
     }
 })  

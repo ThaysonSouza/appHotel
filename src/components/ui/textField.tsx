@@ -9,31 +9,36 @@ type Props = TextInputProps & {
     errorText?: string;
     icon?: keyof typeof MaterialIcons.glyphMap;
 }
-const TextField = ({label, errorText, icon, ...restInputProps } : Props) => {
+const TextField = ({label, errorText, icon, style, ...restInputProps } : Props) => {
     return (
-        <View style={global.inputGrup}>
+        <View style={global.inputGroup}>
             <Text style={global.label}>{label}</Text>
             <View style={[global.inputIcon, errorText ? global.inputError : null]}>
                 {!! icon && (
                     <View>
-                        <MaterialIcons name={icon} size={24} color="#6a1b9a" />
+                        <MaterialIcons name={icon} size={23} color="#4a148c" />
                     </View>
                 )}
                 <TextInput
                     keyboardAppearance="dark"
-                    placeholderTextColor="#9ca3af"
-                    style={[global.input]}
-                    /* const TextField = ({label, errorText, icon, ...restInputProps} : Props-+) => {
-                        style
-                        value 
-                        onChangeText
-                        } */
-                    {... restInputProps }
+                    placeholderTextColor="#e1bee7"
+                    style={[global.input, style]}
+                    /* const TextField = (props: Props) => {
+                        const label = props.label;
+                        const errorText = props.errorText;
+                        const style = props.style;
+                        const value = props.value;
+                        const onChangeText = props.onChangeText;
+                        const placeholder = props.placeholder;
+                        const autoCapitalize = props.autoCapitalize;
+                        const keyboardType = props.keyboardType;
+                    } */
+                    {...restInputProps}
                 />
-            </View>  
-            (!! errorText &&
-                <Text style={global.errorText}>(errorText)</Text>
-            )  
+            </View>   
+            {!! errorText &&
+                <Text style={global.errorText}>{errorText}</Text>
+            }
         </View>
     )
 };
