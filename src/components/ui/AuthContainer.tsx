@@ -17,7 +17,7 @@ const AuthContainer = ({ title, subtitle, icon, children }: Props) => {
     <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"} style={global.keyboardAvoiding}>
       <ScrollView contentContainerStyle={global.container}>
         <View style={global.header}>
-          {!!icon && <FontAwesome6 name={icon} size={30} color="#6a1b9a" />}
+          {!!icon && <FontAwesome6 name={icon} size={30} color="#6E3482" />}
           <Text style={global.title}>{title}</Text>
           {!!subtitle && <Text style={global.subtitle}>{subtitle}</Text>}
         </View>

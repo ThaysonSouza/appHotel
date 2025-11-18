@@ -1,13 +1,16 @@
-import { MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
 import { global } from "./styles";
 
+type IconConfig =
+    | { lib: "MaterialIcons"; name: keyof typeof MaterialIcons.glyphMap }
+    | { lib: "FontAwesome6"; name: keyof typeof FontAwesome6.glyphMap };
 
 type Props = TextInputProps & {
     label: string;
     errorText?: string;
-    icon?: keyof typeof MaterialIcons.glyphMap;
+    icon?: IconConfig;
 }
 const TextField = ({label, errorText, icon, style, ...restInputProps } : Props) => {
     return (
@@ -16,7 +19,12 @@ const TextField = ({label, errorText, icon, style, ...restInputProps } : Props) 
             <View style={[global.inputIcon, errorText ? global.inputError : null]}>
                 {!! icon && (
                     <View>
-                        <MaterialIcons name={icon} size={23} color="#4a148c" />
+                        {icon.lib === "MaterialIcons" && (
+                            <MaterialIcons name={icon.name} size={23} color="#6E3482" />
+                        )}
+                        {icon.lib === "FontAwesome6" && (
+                            <FontAwesome6 name={icon.name} size={23} color="#6E3482" />
+                        )}
                     </View>
                 )}
                 <TextInput
