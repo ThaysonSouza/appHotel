@@ -29,8 +29,9 @@ const RenderLogin = () => {
                 placeholder="*********"
             />
 
-            <TouchableOpacity style={[global.primaryButton]}>
-                <Text style={global.primaryButtonText}>Entrar</Text>
+            <TouchableOpacity style={[global.primaryButton]} 
+            onPress={() => router.push("/(tabs)/explorer")}>
+                <Text style={global.primaryButtonText}>Login</Text>
             </TouchableOpacity>
             <View style={{alignItems: "center", marginTop: height * 0.03}}>
                 <TouchableOpacity onPress={() => router.push("/(auth)/resetPassword")}>

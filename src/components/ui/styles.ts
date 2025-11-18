@@ -1,3 +1,5 @@
+import { Tabs } from "expo-router";
+import { screenOptionsFactory } from "expo-router/build/useScreens";
 import { StyleSheet } from "react-native";
 
 export const global = StyleSheet.create({
@@ -91,5 +93,12 @@ export const global = StyleSheet.create({
         color: "#F5EBFA",
         fontWeight: "700",
         fontSize: 17
+    },
+    screenOptions: {
+        margin: 0,
+        position: "relative",
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "#E7DBEF"
     }
 })

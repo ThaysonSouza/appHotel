@@ -24,7 +24,7 @@ const RenderRegister = () => {
 
             <TextField
                 label="E-mail"
-                placeholder="usuario@email.com"
+                placeholder="user@email.com"
                 keyboardType="email-address"
                 icon={{ lib: "MaterialIcons", name: "email" }}
                 autoCapitalize="none"
@@ -46,7 +46,7 @@ const RenderRegister = () => {
             <PasswordField
                 label="Confirmar senha"
                 placeholder="Repita a senha"
-                icon={{ lib: "FontAwesome6", name: "lock" }}
+                icon={{ lib: "MaterialIcons", name: "lock" }}
             />
 
             <TouchableOpacity style={global.primaryButton}>
@@ -60,7 +60,7 @@ const RenderRegister = () => {
 
                 <TouchableOpacity
                     style={{ marginTop: height * 0.02 }}
-                    onPress={() => router.replace("/")}>
+                    onPress={() => router.back()}>
                     <Text style={{ color: "#6E3482", fontWeight: "600" }}>
                         Já possui conta? Faça login
                     </Text>
