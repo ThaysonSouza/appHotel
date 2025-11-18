@@ -6,14 +6,7 @@ import { global } from '@/components/ui/styles';
 
 const Layout = () => {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: '#6E3482' }}>
-      <Tabs.Screen
-        name="explorer"
-        options={{
-          title: 'Search',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
-        }}
-      />
+    <Tabs screenOptions={{ tabBarActiveTintColor: '#6E3482', tabBarStyle: global.screenOptions }}>
       <Tabs.Screen
         name="reservation"
         options={{
@@ -21,7 +14,14 @@ const Layout = () => {
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="suitcase" color={color} />,
         }}
       />
-      <Tabs.Screen
+      <Tabs.Screen  
+        name="explorer"
+        options={{
+          title: 'Search',
+          tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
+        }}
+      />
+      <Tabs.Screen 
         name="account"
         options={{
           title: 'Account',

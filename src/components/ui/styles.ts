@@ -94,11 +94,9 @@ export const global = StyleSheet.create({
         fontWeight: "700",
         fontSize: 17
     },
-    screenOptions: {
-        margin: 0,
-        position: "relative",
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: "#E7DBEF"
-    }
+    screenOptions:  {
+        backgroundColor: "#E7DBEF",
+        borderRadius: 20
+    }, 
+    
 })
