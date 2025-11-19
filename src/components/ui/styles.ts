@@ -94,9 +94,59 @@ export const global = StyleSheet.create({
         fontWeight: "700",
         fontSize: 17
     },
+
+    //TabBar
     screenOptions:  {
         backgroundColor: "#E7DBEF",
         borderRadius: 20
-    }, 
+    },
+
+    centerView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: "white",
+        borderRadius: 20,
+        width: "90%",
+        padding: 35,
+        alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    card: {
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#E7DBEF",
+        borderRadius: 18,
+        padding: 16,
+        shadowColor: "#49225B",
+        shadowOpacity: 0.1,
+        shadowRadius: 16,
+    },
+    image: {
+        width: 200,
+        height: 150,
+        resizeMode: "cover"
+    },
+    infoSection: {
+        justifyContent: "center",
+        alignItems: "center"
+    },
+    price: {
+        justifyContent: "center",
+        alignItems: "center"
+    }
+
     
 })

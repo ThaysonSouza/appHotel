@@ -1,8 +1,14 @@
-import { Text } from 'react-native';
+import RenderDatePicker from '@/components/ui/DatePicker';
+import { View } from 'react-native';
+import RenderRoomCard from '@/components/ui/RoomCard';
 
 const RenderExplorer = () => {
   return (
-      <Text>search</Text>
+      <View>
+      <RenderDatePicker />
+      <RenderRoomCard  />
+    </View>
+      
   );
 };
 
