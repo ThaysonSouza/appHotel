@@ -35,6 +35,7 @@ const RenderDatePicker = () => {
               selected={date}
               minimumDate={startDate}
               onSelectedChange={handleChange}
+              isGregorian={true}
             />
 
             <TouchableOpacity onPress={handleOnPress}>

@@ -123,30 +123,6 @@ export const global = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 4,
         elevation: 5,
-    },
-    card: {
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#E7DBEF",
-        borderRadius: 18,
-        padding: 16,
-        shadowColor: "#49225B",
-        shadowOpacity: 0.1,
-        shadowRadius: 16,
-    },
-    image: {
-        width: 200,
-        height: 150,
-        resizeMode: "cover"
-    },
-    infoSection: {
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    price: {
-        justifyContent: "center",
-        alignItems: "center"
     }
-
     
 })
