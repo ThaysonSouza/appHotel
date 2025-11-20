@@ -1,40 +1,37 @@
-import { Image, StyleSheet, Dimensions} from "react-native";
-const { width, height } = Dimensions.get("window");
+import { StyleSheet } from "react-native";
 
 export const stylesRoom = StyleSheet.create({
-container: {
-    width: width * 0.50,               
+  container: {
+    width: 240,
     backgroundColor: "#FFF",
-    borderRadius: 12,
+    borderRadius: 16,
     overflow: "hidden",
-    marginRight: 16,           
+    marginRight: 16,
+    shadowColor: "#49225B",
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 4 },
     elevation: 4,
-    height: height * 0.32,
-    shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
   },
 
   image: {
     width: "100%",
-    height: 140,               
+    height: 150,
   },
 
   infoSection: {
-    padding: 12,
-    gap: 5,
+    padding: 14,
+    gap: 6,
   },
 
   title: {
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "700",
     color: "#49225B",
-    
   },
 
   price: {
     fontSize: 14,
-    color: "#555",
+    color: "#7A6A8C",
   },
 });

@@ -1,4 +1,4 @@
-import { View, Text, Image } from "react-native";
+import { Image, Text, View } from "react-native";
 import { stylesRoom } from "./stylesRoom";
 
 const RenderRoomCard = () => {
@@ -6,11 +6,11 @@ const RenderRoomCard = () => {
     <View style={stylesRoom.container}>
 
       <Image
-        source={{ uri: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/29/bf/66/piscina.jpg?w=1000&h=-1&s=1" }}
+        source={{ uri: "https://images.unsplash.com/photo-1505691938895-1758d7feb511" }}
         style={stylesRoom.image}
       />
 
-      <View>
+      <View style={stylesRoom.infoSection}>
         <Text style={stylesRoom.title}>Suite Junior</Text>
 
         <Text style={stylesRoom.price}>

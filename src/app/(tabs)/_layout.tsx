@@ -1,31 +1,44 @@
 /*Função: definir o fluxo de navegação entre as telas disponíveis em Tab Navigator:
 Explorar, Reservas, Perfil*/
+import { global } from '@/components/ui/styles';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
-import { global } from '@/components/ui/styles';
 
 const Layout = () => {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: '#6E3482', tabBarStyle: global.screenOptions }}>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: '#6E3482',
+        tabBarInactiveTintColor: '#B7A9CF',
+        tabBarStyle: global.tabBar,
+        tabBarLabelStyle: global.tabBarLabel,
+        // headerShown: false,
+      }}>
       <Tabs.Screen
         name="reservation"
         options={{
           title: 'Reservation',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="suitcase" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome size={focused ? 28 : 24} name="suitcase" color={color} />
+          ),
         }}
       />
       <Tabs.Screen  
         name="explorer"
         options={{
           title: 'Search',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="search" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome size={focused ? 28 : 24} name="search" color={color} />
+          ),
         }}
       />
       <Tabs.Screen 
         name="account"
         options={{
           title: 'Account',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
+          tabBarIcon: ({ color, focused }) => (
+            <FontAwesome size={focused ? 28 : 24} name="user" color={color} />
+          ),
         }}
       />
     </Tabs>
