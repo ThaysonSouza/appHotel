@@ -1,9 +1,9 @@
-import { Text } from 'react-native';
+import RenderReservation from "@/components/reservation";
 
-const RenderReservation = () => {
+const Reservation = () => {
   return (
-      <Text>Reservas</Text>
+    <RenderReservation />
   );
 };
 
-export default RenderReservation;
+export default Reservation;

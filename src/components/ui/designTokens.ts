@@ -113,9 +113,9 @@ export const dimensions = {
   inputIconSize: 23,
   
   // Cards
-  cardWidth: 240,
-  cardImageHeight: 150,
-  cardPadding: 14,
+  cardWidth: 200,
+  cardImageHeight: 130,
+  cardPadding: 12,
   
   // TabBar
   tabBarHeight: 68,

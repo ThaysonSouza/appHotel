@@ -2,6 +2,7 @@ import { Feather } from "@expo/vector-icons";
 import { useState } from "react";
 import { Modal, Text, TouchableOpacity, View } from "react-native";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
+import { colors, dimensions } from "./designTokens";
 import { global } from "./styles";
 
 const RenderDatePicker = () => {
@@ -30,7 +31,7 @@ const RenderDatePicker = () => {
           <Text style={global.datePickerHint}>Toque para escolher a data da estadia</Text>
         </View>
         <View style={global.datePickerIconBubble}>
-          <Feather name="calendar" size={20} color="#6E3482" />
+          <Feather name="calendar" size={dimensions.iconSize.sm} color={colors.primary} />
         </View>
       </TouchableOpacity>
 
@@ -41,11 +42,11 @@ const RenderDatePicker = () => {
             <DatePicker
               mode="calendar"
               options={{
-                textHeaderColor: "#49225B",
-                mainColor: "#6E3482",
-                textDefaultColor: "#49225B",
-                selectedTextColor: "#F5EBFA",
-                backgroundColor: "#F5EBFA",
+                textHeaderColor: colors.deepPurple,
+                mainColor: colors.primary,
+                textDefaultColor: colors.deepPurple,
+                selectedTextColor: colors.lighter,
+                backgroundColor: colors.lighter,
               }}
               selected={date}
               minimumDate={startDate}

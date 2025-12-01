@@ -1,13 +1,13 @@
 import { useRouter } from "expo-router";
-import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
 import TextField from "../ui/TextField";
+import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
 
 const RenderRegister = () => {
     const router = useRouter();
-    const { height } = Dimensions.get("window");
 
     return (
         <AuthContainer
@@ -53,15 +53,22 @@ const RenderRegister = () => {
                 <Text style={global.primaryButtonText}>Criar conta</Text>
             </TouchableOpacity>
 
-            <View style={{ alignItems: "center", marginTop: height * 0.02 }}>
-                <Text style={{ color: "#49225B", fontSize: 13, textAlign: "center" }}>
+            <View style={{ alignItems: "center", marginTop: spacing.lg }}>
+                <Text style={{ 
+                    color: colors.textPrimary, 
+                    fontSize: typography.size.sm, 
+                    textAlign: "center" 
+                }}>
                     Ao continuar você concorda com nossos Termos e Política de privacidade.
                 </Text>
 
                 <TouchableOpacity
-                    style={{ marginTop: height * 0.02 }}
+                    style={{ marginTop: spacing.lg }}
                     onPress={() => router.back()}>
-                    <Text style={{ color: "#6E3482", fontWeight: "600" }}>
+                    <Text style={{ 
+                        color: colors.primary, 
+                        fontWeight: typography.weight.semibold 
+                    }}>
                         Já possui conta? Faça login
                     </Text>
                 </TouchableOpacity>

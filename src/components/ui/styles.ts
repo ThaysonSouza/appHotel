@@ -68,7 +68,7 @@ export const global = StyleSheet.create({
     divider: {
         height: 1,
         width: "50%",
-        backgroundColor: "#D9C8EA",
+        backgroundColor: colors.lavender,
         borderRadius: borderRadius.sm,
         alignSelf: "center",
         marginTop: spacing.lg
@@ -270,5 +270,67 @@ export const global = StyleSheet.create({
     datePickerPrimaryText: {
         color: colors.lighter,
         fontWeight: typography.weight.bold,
+    },
+
+    // ============================================
+    // INFO RESERVA
+    // ============================================
+    infoReservaContainer: {
+        backgroundColor: colors.white,
+        borderRadius: borderRadius.xl,
+        padding: spacing.lg,
+        marginTop: spacing.base,
+        ...shadows.md,
+    },
+    infoReservaHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing.sm,
+        marginBottom: spacing.base,
+        paddingBottom: spacing.base,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.light,
+    },
+    infoReservaTitle: {
+        fontSize: typography.size.lg,
+        fontWeight: typography.weight.bold,
+        color: colors.textPrimary,
+    },
+    infoReservaContent: {
+        gap: spacing.sm,
+    },
+    infoReservaRow: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: spacing.xs,
+    },
+    infoReservaLabelContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: spacing.sm,
+        flex: 1,
+    },
+    infoReservaLabel: {
+        fontSize: typography.size.md,
+        fontWeight: typography.weight.medium,
+        color: colors.textTertiary,
+    },
+    infoReservaValue: {
+        fontSize: typography.size.md,
+        fontWeight: typography.weight.semibold,
+        color: colors.textPrimary,
+        textAlign: "right",
+        flex: 1,
+    },
+    infoReservaPrice: {
+        fontSize: typography.size.lg,
+        fontWeight: typography.weight.bold,
+        color: colors.primary,
+    },
+    infoReservaDivider: {
+        height: 1,
+        backgroundColor: colors.light,
+        marginVertical: spacing.xs,
     },
 });
