@@ -1,262 +1,274 @@
 import { StyleSheet } from "react-native";
+import { borderRadius, colors, dimensions, shadows, spacing, typography } from "./designTokens";
+
+/**
+ * Sistema de Estilos Global
+ * 
+ * Organizado por seções para fácil manutenção:
+ * - Layout: containers, headers, áreas principais
+ * - Inputs: campos de texto, labels, erros
+ * - Buttons: botões primários, secundários, estados
+ * - TabBar: navegação inferior
+ * - Modal: overlays e modais
+ * - DatePicker: componentes de seleção de data
+ */
 
 export const global = StyleSheet.create({
-    // Layout
+    // ============================================
+    // LAYOUT
+    // ============================================
     safeArea: {
         flex: 1,
-        backgroundColor: "#F5EBFA"
+        backgroundColor: colors.lighter
     },
     keyboardAvoiding: {
         flex: 1
     },
     container: {
-        paddingHorizontal: 24,
-        paddingVertical: 40
+        paddingHorizontal: spacing.xl,
+        paddingVertical: spacing.xxxl
     },
     header: {
         alignItems: "center",
-        marginBottom: 20,
+        marginBottom: spacing.lg,
         position: "relative"
     },
     backButton: {
         position: "absolute",
         left: 0,
         top: 0,
-        padding: 10,
-        borderRadius: 999,
-        backgroundColor: "#F5EBFA",
-        shadowColor: "#49225B",
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-        shadowOffset: { width: 0, height: 3 },
-        elevation: 3
+        padding: spacing.sm,
+        borderRadius: borderRadius.round,
+        backgroundColor: colors.lighter,
+        ...shadows.sm
     },
     title: {
-        fontSize: 26,
-        fontWeight: "800",
-        color: "#49225B"
+        fontSize: typography.size.title,
+        fontWeight: typography.weight.extrabold,
+        color: colors.textPrimary
     },
     subtitle: {
-        fontSize: 16,
-        color: "#6E3482",
-        marginTop: 6,
+        fontSize: typography.size.lg,
+        color: colors.textSecondary,
+        marginTop: spacing.xs,
         textAlign: "center"
     },
     helperText: {
-        fontSize: 14,
-        color: "#7A6A8C",
-        marginTop: 14,
+        fontSize: typography.size.base,
+        color: colors.textTertiary,
+        marginTop: spacing.base,
         textAlign: "center"
     },
     content: {
-        backgroundColor: "#E7DBEF",
-        borderRadius: 18,
-        padding: 16,
-        shadowColor: "#49225B",
-        shadowOpacity: 0.1,
-        shadowRadius: 16,
-        elevation: 4
+        backgroundColor: colors.light,
+        borderRadius: borderRadius.xl,
+        padding: spacing.base,
+        ...shadows.md
     },
     divider: {
         height: 1,
         width: "50%",
         backgroundColor: "#D9C8EA",
-        borderRadius: 10,
+        borderRadius: borderRadius.sm,
         alignSelf: "center",
-        marginTop: 20
+        marginTop: spacing.lg
     },
     authLinks: {
         alignItems: "center",
-        marginTop: 20,
-        gap: 16
+        marginTop: spacing.lg,
+        gap: spacing.base
     },
     inlineLink: {
-        color: "#6E3482",
-        fontWeight: "600",
-        fontSize: 15,
+        color: colors.primary,
+        fontWeight: typography.weight.semibold,
+        fontSize: typography.size.md,
         textAlign: "center"
     },
 
-    // Inputs
+    // ============================================
+    // INPUTS
+    // ============================================
     inputGroup: {
-        marginBottom: 16
+        marginBottom: spacing.base
     },
     label: {
-        fontSize: 15,
-        fontWeight: "600",
-        color: "#49225B",
-        marginBottom: 6
+        fontSize: typography.size.md,
+        fontWeight: typography.weight.semibold,
+        color: colors.textPrimary,
+        marginBottom: spacing.xs
     },
     inputIcon: {
         borderWidth: 1,
-        borderColor: "#A56ABD",
-        borderRadius: 12,
+        borderColor: colors.lavender,
+        borderRadius: borderRadius.md,
         flexDirection: "row",
         alignItems: "center",
-        paddingLeft: 12,
-        backgroundColor: "#F5EBFA"
+        paddingLeft: spacing.md,
+        backgroundColor: colors.lighter
     },
     inputError: {
-        backgroundColor: "#fed5d5ff",
-        borderColor: "rgba(139, 0, 0, 1)"
+        backgroundColor: colors.error,
+        borderColor: colors.errorBorder
     },
     input: {
         flex: 1,
-        fontSize: 16,
-        color: "#49225B",
-        fontWeight: "500",
-        paddingHorizontal: 12
+        fontSize: typography.size.lg,
+        color: colors.textPrimary,
+        fontWeight: typography.weight.medium,
+        paddingHorizontal: spacing.md
+    },
+    inputPlaceholder: {
+        color: colors.textPlaceholder
     },
     eyeIcon: {
         position: "absolute",
-        right: 18,
-        top: 45
+        right: spacing.base,
+        top: 35
     },
     errorText: {
-        color: "red",
-        fontSize: 15,
-        marginTop: 8
+        color: colors.errorText,
+        fontSize: typography.size.md,
+        marginTop: spacing.sm
     },
 
-    // Buttons
+    // ============================================
+    // BUTTONS
+    // ============================================
     primaryButton: {
-        backgroundColor: "#6E3482",
-        borderRadius: 30,
-        paddingVertical: 14,
+        backgroundColor: colors.primary,
+        borderRadius: borderRadius.pill,
+        paddingVertical: dimensions.buttonPaddingVertical,
         alignItems: "center",
-        marginTop: 12
+        marginTop: spacing.md
     },
-    primaryButtonDisabled:{
-        backgroundColor: "#9ca3af"
-
+    primaryButtonDisabled: {
+        backgroundColor: colors.disabled
     },
     primaryButtonText: {
-        color: "#F5EBFA",
-        fontWeight: "700",
-        fontSize: 17
+        color: colors.lighter,
+        fontWeight: typography.weight.bold,
+        fontSize: typography.size.xl
     },
 
-    // TabBar
-    tabBar:  {
+    // ============================================
+    // TABBAR
+    // ============================================
+    tabBar: {
         position: "absolute",
-        left: 20,
-        right: 20,
-        bottom: 18,
-        backgroundColor: "#F5EBFA",
-        borderRadius: 26,
-        height: 68,
+        left: spacing.lg,
+        right: spacing.lg,
+        bottom: spacing.base,
+        backgroundColor: colors.lighter,
+        borderRadius: borderRadius.xxl,
+        height: dimensions.tabBarHeight,
         borderWidth: 1,
-        borderColor: "#E7DBEF",
-        shadowColor: "#49225B",
-        shadowOpacity: 0.12,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 6 },
-        elevation: 8,
-        paddingHorizontal: 20,
-        paddingTop: 6,
-        paddingBottom: 10
+        borderColor: colors.light,
+        ...shadows.lg,
+        paddingHorizontal: spacing.lg,
+        paddingTop: spacing.xs,
+        paddingBottom: spacing.sm
     },
     tabBarLabel: {
-        fontSize: 12,
-        fontWeight: "700",
-        marginTop: -4
+        fontSize: typography.size.xs,
+        fontWeight: typography.weight.bold,
+        marginTop: -spacing.xs
     },
 
-    // Modal
+    // ============================================
+    // MODAL
+    // ============================================
     centerView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: 16,
-        backgroundColor: "rgba(0,0,0,0.35)"
+        paddingHorizontal: spacing.base,
+        backgroundColor: colors.overlay
     },
     modalView: {
-        backgroundColor: "#FFFFFF",
-        borderRadius: 28,
+        backgroundColor: colors.white,
+        borderRadius: borderRadius.xxxl,
         width: "100%",
-        padding: 24,
+        padding: spacing.xl,
         alignItems: "center",
-        shadowColor: "#49225B",
+        shadowColor: colors.deepPurple,
         shadowOffset: {
             width: 0,
             height: 2,
         },
         shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowRadius: spacing.xs,
         elevation: 6,
     },
 
-    // DatePicker
+    // ============================================
+    // DATEPICKER
+    // ============================================
     datePickerWrapper: {
-        marginHorizontal: 20,
-        marginTop: 24,
-        gap: 8,
+        marginHorizontal: spacing.lg,
+        marginTop: spacing.xl,
+        gap: spacing.sm,
     },
     datePickerLabel: {
-        fontSize: 15,
-        fontWeight: "600",
-        color: "#49225B",
+        fontSize: typography.size.md,
+        fontWeight: typography.weight.semibold,
+        color: colors.textPrimary,
     },
     datePickerTrigger: {
-        backgroundColor: "#FFFFFF",
-        borderRadius: 24,
+        backgroundColor: colors.white,
+        borderRadius: borderRadius.xxl,
         borderWidth: 1,
-        borderColor: "#E7DBEF",
-        paddingHorizontal: 20,
-        paddingVertical: 16,
+        borderColor: colors.light,
+        paddingHorizontal: spacing.lg,
+        paddingVertical: spacing.base,
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        shadowColor: "#49225B",
-        shadowOpacity: 0.08,
-        shadowRadius: 6,
-        shadowOffset: { width: 0, height: 4 },
-        elevation: 4,
+        ...shadows.md,
     },
     datePickerValue: {
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#6E3482",
+        fontSize: typography.size.xxl,
+        fontWeight: typography.weight.bold,
+        color: colors.primary,
     },
     datePickerHint: {
-        fontSize: 13,
-        color: "#7A6A8C",
-        marginTop: 4,
+        fontSize: typography.size.sm,
+        color: colors.textTertiary,
+        marginTop: spacing.xs,
     },
     datePickerIconBubble: {
-        backgroundColor: "#F5EBFA",
-        borderRadius: 20,
-        padding: 10,
+        backgroundColor: colors.lighter,
+        borderRadius: spacing.lg,
+        padding: spacing.sm,
     },
     datePickerModalTitle: {
-        fontSize: 18,
-        fontWeight: "700",
-        color: "#49225B",
-        marginBottom: 12,
+        fontSize: typography.size.xxl,
+        fontWeight: typography.weight.bold,
+        color: colors.textPrimary,
+        marginBottom: spacing.md,
     },
     datePickerActions: {
         flexDirection: "row",
         justifyContent: "flex-end",
-        gap: 12,
+        gap: spacing.md,
         width: "100%",
-        marginTop: 16,
+        marginTop: spacing.base,
     },
     datePickerGhostButton: {
-        paddingHorizontal: 18,
-        paddingVertical: 10,
+        paddingHorizontal: spacing.base,
+        paddingVertical: spacing.sm,
     },
     datePickerGhostText: {
-        color: "#6E3482",
-        fontWeight: "600",
+        color: colors.primary,
+        fontWeight: typography.weight.semibold,
     },
     datePickerPrimaryButton: {
-        backgroundColor: "#6E3482",
-        borderRadius: 22,
-        paddingHorizontal: 22,
-        paddingVertical: 10,
+        backgroundColor: colors.primary,
+        borderRadius: borderRadius.xxl,
+        paddingHorizontal: spacing.xl,
+        paddingVertical: spacing.sm,
     },
     datePickerPrimaryText: {
-        color: "#F5EBFA",
-        fontWeight: "700",
+        color: colors.lighter,
+        fontWeight: typography.weight.bold,
     },
 });

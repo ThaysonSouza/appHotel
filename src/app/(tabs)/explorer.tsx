@@ -1,22 +1,9 @@
-import RenderDatePicker from '@/components/ui/DatePicker';
-import RenderRoomCard from '@/components/ui/RoomCard';
-import { ScrollView, View } from 'react-native';
+import RenderExplorer from "@/components/explorer";
 
-const RenderExplorer = () => {
-  return (
-    <View>
-      <RenderDatePicker />
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{ paddingHorizontal: 20, paddingRight: 4 }}
-        style={{ marginTop: 16 }}>
-        {Array.from({ length: 5 }).map((_, index) => (
-          <RenderRoomCard key={`room-${index}`} />
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
+const Explorer = () => {
+    return (
+        <RenderExplorer />
+    );
+}
 
-export default RenderExplorer;
+export default Explorer;

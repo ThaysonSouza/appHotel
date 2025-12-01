@@ -1,11 +1,13 @@
-import { FontAwesome6, MaterialIcons } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { Text, TextInput, TextInputProps, View } from "react-native";
+import { colors, dimensions } from "./designTokens";
 import { global } from "./styles";
 
 type IconConfig =
     | { lib: "MaterialIcons"; name: keyof typeof MaterialIcons.glyphMap }
-    | { lib: "FontAwesome6"; name: keyof typeof FontAwesome6.glyphMap };
+    | { lib: "FontAwesome6"; name: keyof typeof FontAwesome6.glyphMap }
+    | { lib: "FontAwesome5"; name: keyof typeof FontAwesome5.glyphMap };
 
 type Props = TextInputProps & {
     label: string;
@@ -20,27 +22,20 @@ const TextField = ({label, errorText, icon, style, ...restInputProps } : Props) 
                 {!! icon && (
                     <View>
                         {icon.lib === "MaterialIcons" && (
-                            <MaterialIcons name={icon.name} size={23} color="#6E3482" />
+                            <MaterialIcons name={icon.name} size={dimensions.inputIconSize} color={colors.primary} />
                         )}
                         {icon.lib === "FontAwesome6" && (
-                            <FontAwesome6 name={icon.name} size={23} color="#6E3482" />
+                            <FontAwesome6 name={icon.name} size={dimensions.inputIconSize} color={colors.primary} />
+                        )}
+                        {icon.lib === "FontAwesome5" && (
+                            <FontAwesome5 name={icon.name} size={dimensions.inputIconSize} color={colors.primary} />
                         )}
                     </View>
                 )}
                 <TextInput
                     keyboardAppearance="dark"
-                    placeholderTextColor="#e1bee7"
+                    placeholderTextColor={colors.textPlaceholder}
                     style={[global.input, style]}
-                    /* const TextField = (props: Props) => {
-                        const label = props.label;
-                        const errorText = props.errorText;
-                        const style = props.style;
-                        const value = props.value;
-                        const onChangeText = props.onChangeText;
-                        const placeholder = props.placeholder;
-                        const autoCapitalize = props.autoCapitalize;
-                        const keyboardType = props.keyboardType;
-                    } */
                     {...restInputProps}
                 />
             </View>   

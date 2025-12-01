@@ -1,8 +1,10 @@
-/* Esqueci minha senha */
 import RenderResetPassword from "@/components/resetPassword";
 
-const Reset = () => {
-    return <RenderResetPassword />;
+const ResetPassword = () => {
+      return (
+        <RenderResetPassword />
+   );
+
 }
 
-export default Reset;
+export default ResetPassword;

@@ -1,37 +1,41 @@
 import { StyleSheet } from "react-native";
+import { borderRadius, colors, dimensions, shadows, spacing, typography } from "./designTokens";
+
+/**
+ * Estilos do RoomCard
+ * 
+ * Usa os design tokens para manter consistência
+ * com o resto do sistema de design
+ */
 
 export const stylesRoom = StyleSheet.create({
   container: {
-    width: 240,
-    backgroundColor: "#FFF",
-    borderRadius: 16,
+    width: dimensions.cardWidth,
+    backgroundColor: colors.white,
+    borderRadius: borderRadius.lg,
     overflow: "hidden",
-    marginRight: 16,
-    shadowColor: "#49225B",
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    marginRight: spacing.base,
+    ...shadows.md,
   },
 
   image: {
     width: "100%",
-    height: 150,
+    height: dimensions.cardImageHeight,
   },
 
   infoSection: {
-    padding: 14,
-    gap: 6,
+    padding: dimensions.cardPadding,
+    gap: spacing.xs,
   },
 
   title: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#49225B",
+    fontSize: typography.size.lg,
+    fontWeight: typography.weight.bold,
+    color: colors.textPrimary,
   },
 
   price: {
-    fontSize: 14,
-    color: "#7A6A8C",
+    fontSize: typography.size.base,
+    color: colors.textTertiary,
   },
 });
