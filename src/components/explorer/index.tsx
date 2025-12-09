@@ -15,11 +15,11 @@ const RenderExplorer = () => {
     <AuthContainer>
       <View style={{ 
         display: "flex", 
-        flexDirection: "row", 
+        flexDirection: "column", 
         gap: spacing.md, 
         justifyContent: "center" 
       }}>      
-        <View style={{ display: "flex", flexDirection: "column", flex: 1, maxWidth: 160 }}>
+        <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <TouchableOpacity onPress={() => setCalendar("checkin")}>
             <View>
               <TextField 
@@ -31,11 +31,19 @@ const RenderExplorer = () => {
             </View>
           </TouchableOpacity>
           {calendar === "checkin" && (
-            <DateSelector onSelectDate={(date) => { setCheckIn(date); setCalendar(undefined); }} /> 
+            <DateSelector 
+              onSelectDate={(date) => { 
+                if (date) {
+                  setCheckIn(date); 
+                }
+                setCalendar(undefined); 
+              }} 
+              onClose={() => setCalendar(undefined)}
+            /> 
           )}  
         </View>
 
-        <View style={{ display: "flex", flexDirection: "column", flex: 1, maxWidth: 160 }}>
+        <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
           <TouchableOpacity onPress={() => setCalendar("checkout")}>
             <View>
               <TextField 
@@ -47,7 +55,15 @@ const RenderExplorer = () => {
             </View>
           </TouchableOpacity>
           {calendar === "checkout" && (
-            <DateSelector onSelectDate={(date) => { setCheckOut(date); setCalendar(undefined); }} /> 
+            <DateSelector 
+              onSelectDate={(date) => { 
+                if (date) {
+                  setCheckOut(date); 
+                }
+                setCalendar(undefined); 
+              }} 
+              onClose={() => setCalendar(undefined)}
+            /> 
           )} 
         </View>
       </View>

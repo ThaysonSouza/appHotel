@@ -1,7 +1,7 @@
 /*Função: definir o fluxo de navegação entre as telas disponíveis em Tab Navigator:
 Explorar, Reservas, Perfil*/
-import { global } from '@/components/ui/styles';
 import { colors } from '@/components/ui/designTokens';
+import { global } from '@/components/ui/styles';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { Tabs } from 'expo-router';
 

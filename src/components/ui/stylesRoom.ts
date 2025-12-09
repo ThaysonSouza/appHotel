@@ -1,13 +1,6 @@
 import { StyleSheet } from "react-native";
 import { borderRadius, colors, dimensions, shadows, spacing, typography } from "./designTokens";
 
-/**
- * Estilos do RoomCard
- * 
- * Usa os design tokens para manter consistência
- * com o resto do sistema de design
- */
-
 export const stylesRoom = StyleSheet.create({
   container: {
     width: dimensions.cardWidth,

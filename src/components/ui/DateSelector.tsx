@@ -1,61 +1,64 @@
-import { useState } from "react";
-import { Modal, Text, TouchableOpacity, View } from "react-native";
-import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
-import { colors } from "./designTokens";
+import { Dimensions, Modal, TouchableOpacity, View } from "react-native";
+import DatePicker, { getToday } from "react-native-modern-datepicker";
+import { borderRadius, colors } from "./designTokens";
 import { global } from "./styles";
 
-type DateSelectorProps = {
+type Props = {
   onSelectDate: (date: string) => void;
+  onClose?: () => void;
 };
 
-const DateSelector = ({ onSelectDate }: DateSelectorProps) => {
-  const [open, setOpen] = useState(false);
-  const [date, setDate] = useState("");
-
-  const today = new Date();
-  const tomorrow = new Date(today);
-  tomorrow.setDate(today.getDate() + 1);
-  const startDate = getFormatedDate(tomorrow, "DD/MM/YYYY");
-
-  function toggleModal() {
-    setOpen((prev) => !prev);
-  }
-
-  function handleChange(selectedDate: string) {
-    setDate(selectedDate);
-    onSelectDate(selectedDate);
-    setOpen(false);
-  }
-
+const DateSelector = ({ onSelectDate, onClose }: Props) => {
+  const { width } = Dimensions.get("window"); // Componente para dimensionar largura e altura (responsividade)
+  const today = getToday();
+  
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+  
   return (
-    <View>
-      <Modal animationType="fade" transparent visible={open} onRequestClose={toggleModal}>
-        <View style={global.centerView}>
+    <Modal
+      animationType="fade"
+      transparent={true}
+      visible={true}
+      onRequestClose={handleClose}
+    >
+      <TouchableOpacity 
+        style={global.centerView}
+        activeOpacity={1}
+        onPress={handleClose}
+      >
+        <TouchableOpacity activeOpacity={1} onPress={(e) => e.stopPropagation()}>
           <View style={global.modalView}>
-            <Text style={global.datePickerModalTitle}>Escolha a data</Text>
             <DatePicker
               mode="calendar"
               options={{
-                textHeaderColor: colors.deepPurple,
-                mainColor: colors.primary,
-                textDefaultColor: colors.deepPurple,
-                selectedTextColor: colors.lighter,
-                backgroundColor: colors.lighter,
+                backgroundColor: colors.lighter, // Fundo (background)
+                textHeaderColor: colors.primary, // Mês
+                textDefaultColor: colors.deepPurple, // Número (data)
+                selectedTextColor: colors.white, // Cor do número (data) quando selecionado
+                mainColor: colors.primary, // Setas laterais e seletor
+                textSecondaryColor: colors.deepPurple, // Dia da semana
+                borderColor: colors.primary, // Borda
+                textFontSize: 14, // Tamanho da fonte (dias da semana e número -> data)
+                textHeaderFontSize: 15, // Tamanho da fonte (mês)
               }}
-              selected={date || startDate}
-              minimumDate={startDate}
-              onSelectedChange={handleChange}
-              isGregorian
+              style={{ 
+                borderRadius: borderRadius.sm, 
+                width: width * 0.85,
+              }}
+              isGregorian={true}
+              minimumDate={today}
+              onSelectedChange={(date) => {
+                onSelectDate(date);
+              }}
             />
-            <View style={global.datePickerActions}>
-              <TouchableOpacity style={global.datePickerGhostButton} onPress={toggleModal}>
-                <Text style={global.datePickerGhostText}>Cancelar</Text>
-              </TouchableOpacity>
-            </View>
           </View>
-        </View>
-      </Modal>
-    </View>
+        </TouchableOpacity>
+      </TouchableOpacity>
+    </Modal>
   );
 };
 
