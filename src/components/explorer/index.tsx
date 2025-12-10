@@ -68,7 +68,7 @@ const RenderExplorer = () => {
         </View>
       </View>
 
-      <View style={{ flex: 1, marginTop: spacing.base }}>
+      <View style={{marginTop: spacing.base }}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
