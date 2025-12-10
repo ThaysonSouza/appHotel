@@ -1,25 +1,13 @@
 import { StyleSheet } from "react-native";
 import { borderRadius, colors, dimensions, shadows, spacing, typography } from "./designTokens";
 
-/**
- * Sistema de Estilos Global
- * 
- * Organizado por seções para fácil manutenção:
- * - Layout: containers, headers, áreas principais
- * - Inputs: campos de texto, labels, erros
- * - Buttons: botões primários, secundários, estados
- * - TabBar: navegação inferior
- * - Modal: overlays e modais
- * - DatePicker: componentes de seleção de data
- */
-
 export const global = StyleSheet.create({
     // ============================================
     // LAYOUT
     // ============================================
     safeArea: {
         flex: 1,
-        backgroundColor: colors.lighter
+        backgroundColor: colors.lighter,
     },
     keyboardAvoiding: {
         flex: 1

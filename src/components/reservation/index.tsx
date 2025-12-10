@@ -78,7 +78,7 @@ const RenderReservation = () => {
 
   return (
     <AuthContainer
-      title="Minha Reserva"
+      title="Sobre sua reserva"
       subtitle="Revise os detalhes antes de confirmar"
       icon="briefcase"
     >
