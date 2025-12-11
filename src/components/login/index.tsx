@@ -5,6 +5,7 @@ import PasswordField from "../ui/PasswordField";
 import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
 import { useMemo, useState } from "react";
+import { Alert } from "react-native";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -15,7 +16,10 @@ const RenderLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [touched, setTouched] = useState<{ email?: boolean; password?: boolean }>({});
+  const [touched, setTouched] = useState<{
+    email?: boolean;
+    password?: boolean;
+  }>({});
 
   const errors = useMemo(() => {
     const error: Record<string, string> = {};
@@ -35,7 +39,26 @@ const RenderLogin = () => {
     email && password && Object.keys(errors).length === 0 && !loading;
 
   const handleSubmit = async () => {
-    router.replace("/(tabs)/explorer");
+    try {
+      setLoading(true);
+      console.log("[LOGIN]  Tentando login com: ", {
+        email: email,
+        password: password
+      });
+      await new Promise((req) => setTimeout(req, 2000));
+      if (email === "t@t.c" && password === "123") {
+        Alert.alert("login realizado!!");
+        router.replace("/(tabs)/explorer");
+      }else{
+        Alert.alert("login invalido!");
+        return;
+      }
+    } catch (erro){
+      Alert.alert("Erro", "Falha ao tentar logar. Tente novamente")
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,14 +67,13 @@ const RenderLogin = () => {
       subtitle="Faça seu login para continuar!"
       icon="hotel"
     >
-
       <TextField
         label="E-mail"
         icon={{ lib: "MaterialIcons", name: "email" }}
         placeholder="user@email.com"
         keyboardType="email-address"
         value={email}
-        onChangeText={(input) => setEmail(input)}     
+        onChangeText={(input) => setEmail(input)}
         errorText={errors.email}
       />
 

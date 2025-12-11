@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
 import TextField from "../ui/TextField";
@@ -44,13 +44,11 @@ const RenderRegister = () => {
     if (touched.phone && telefone && !isValidPhone(telefone))
       error.phone = "Digite um telefone válido";
 
-    if (touched.password && !password)
-      error.password = "Senha obrigatória";
+    if (touched.password && !password) error.password = "Senha obrigatória";
     if (touched.password && password.length < 6)
       error.password = "No mínimo 6 caracteres";
 
-    if (touched.confirm && !confirm)
-      error.confirm = "Confirme sua senha";
+    if (touched.confirm && !confirm) error.confirm = "Confirme sua senha";
     if (touched.confirm && confirm !== password)
       error.confirm = "As senhas não coincidem";
 
@@ -67,17 +65,31 @@ const RenderRegister = () => {
     !loading;
 
   const handleSubmit = async () => {
-
-    router.replace("/(tabs)/explorer");
+    try {
+      setLoading(true);
+      console.log("[REGISTER] Tentando criar este usuario: ", {
+        name: name,
+        email: email,
+        telefone: telefone,
+        password: password,
+        confirm: confirm,
+      });
+      await new Promise((req) => setTimeout(req, 2000));
+      Alert.alert("Cadastro realizado!!");
+      router.replace("/(tabs)/explorer");
+    } catch (error) {
+      Alert.alert("Erro", "Falha ao tentar Cadastrar. Tente novamente");
+    }
+    finally{
+      setLoading(false);
+    }
   };
-
   return (
     <AuthContainer
       title="Crie sua conta"
       subtitle="Preencha os dados e comece a reservar!"
       icon="user"
     >
-
       <TextField
         label="Nome completo"
         placeholder="Digite seu nome"
@@ -143,7 +155,8 @@ const RenderRegister = () => {
             textAlign: "center",
           }}
         >
-          Ao continuar você concorda com nossos Termos e Política de privacidade.
+          Ao continuar você concorda com nossos Termos e Política de
+          privacidade.
         </Text>
 
         <TouchableOpacity

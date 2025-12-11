@@ -1,5 +1,5 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
@@ -30,7 +30,25 @@ const RenderResetPassword = () => {
     email && Object.keys(errors).length === 0 && !loading;
 
   const handleSubmit = async () => {
-    router.back();
+    try {
+      setLoading(true);
+      console.log("[RESET PASSWORD] Tentando enviar codigo para esse email: ", {
+        email: email,
+      });
+      await new Promise((req) => setTimeout(req, 2000));
+      if (email === "t@t.c") {
+        Alert.alert("Codigo enviado!!");
+        router.back();
+      }else{
+        Alert.alert("Email invalido!!");
+        return;
+      }
+    } catch (erro){
+      Alert.alert("Erro", "Falha ao tentar enviar codigo. Tente novamente");
+    }
+    finally{
+      setLoading(false);
+    }
   };
 
   return (
