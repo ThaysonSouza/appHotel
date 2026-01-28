@@ -1,91 +1,110 @@
 import { useState } from "react";
-import { ScrollView, TouchableOpacity, View } from "react-native";
+import { Dimensions, Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import DateSelector from "../ui/DateSelector";
-import RenderRoomCard from "../ui/RoomCard";
+import InputSpin from "../ui/InputSpin";
+import RoomCard from "../ui/RoomCard";
 import TextField from "../ui/TextField";
-import { spacing } from "../ui/designTokens";
+import { global } from "../ui/styles";
 
 const RenderExplorer = () => {
+  const { width } = Dimensions.get("window");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
-  const [calendar, setCalendar] = useState<"checkin" | "checkout">();
+  const [qntGuests, setQntGuests] = useState<number>(1);
+  const [calendar, setCalendar] = useState<"checkin" | "checkout" | null>(null);
+  const closeCalendar = () => setCalendar(null);
 
   return (
     <AuthContainer>
-      <View style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        gap: spacing.md, 
-        justifyContent: "center" 
-      }}>      
-        <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+      <View style={{ display: "flex", justifyContent: "center" }}>
+        
+        {/* CHECK-IN */}
+        <View style={{ display: "flex", flexDirection: "column" }}>
           <TouchableOpacity onPress={() => setCalendar("checkin")}>
-            <View>
-              <TextField 
-                label="Check-in" 
-                icon={{ lib: "FontAwesome5", name: "calendar-alt" }} 
-                placeholder="Selecione a data" 
-                value={checkIn} 
+            <View style={{ width: width * 0.8 }}>
+              <TextField
+                label="Check-in"
+                icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
+                placeholder="Selecione a data"
+                value={checkIn}
               />
             </View>
           </TouchableOpacity>
-          {calendar === "checkin" && (
-            <DateSelector 
-              onSelectDate={(date) => { 
-                if (date) {
-                  setCheckIn(date); 
-                }
-                setCalendar(undefined); 
-              }} 
-              onClose={() => setCalendar(undefined)}
-            /> 
-          )}  
         </View>
 
-        <View style={{ display: "flex", flexDirection: "column", flex: 1 }}>
+        {/* CHECK-OUT */}
+        <View style={{ display: "flex", flexDirection: "column" }}>
           <TouchableOpacity onPress={() => setCalendar("checkout")}>
-            <View>
-              <TextField 
-                label="Check-out" 
-                icon={{ lib: "FontAwesome5", name: "calendar-alt" }} 
-                placeholder="Selecione a data" 
-                value={checkOut} 
+            <View style={{ width: width * 0.8 }}>
+              <TextField
+                label="Check-out"
+                icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
+                placeholder="Selecione a data"
+                value={checkOut}
               />
             </View>
           </TouchableOpacity>
-          {calendar === "checkout" && (
-            <DateSelector 
-              onSelectDate={(date) => { 
-                if (date) {
-                  setCheckOut(date); 
-                }
-                setCalendar(undefined); 
-              }} 
-              onClose={() => setCalendar(undefined)}
-            /> 
-          )} 
+        </View>
+
+        <Modal transparent
+        animationType="fade"
+        visible={calendar !== null}
+        onRequestClose={closeCalendar}
+        >
+          {/*Backdrop: qualquer clique aqui fora, fecha*/}
+          <Pressable
+          style={global.modalView}
+           onPress={closeCalendar}>
+            {/*Area do calendario que ao clicar, nao o fecha */}
+            
+            <Pressable onPress={() => {}}>
+               {calendar === "checkin" && (
+                <DateSelector
+                onSelectDate={(date) => {
+                  setCheckIn(date);
+                  closeCalendar();
+              }}
+              />
+            )}
+
+              {calendar === "checkout" && (
+              <DateSelector
+              onSelectDate={(date) => {
+                setCheckOut(date);
+                closeCalendar();
+              }}
+            />
+          )}
+          
+            </Pressable>
+
+          </Pressable>
+
+        </Modal>
+
+        {/* QUANTIDADE DE HÓSPEDES */}
+        <View>
+          <Text style={global.label}>Quantidade de hóspedes</Text>
+          <InputSpin
+            guests={qntGuests}
+            onSelectSpin={(guests) => {
+              setQntGuests(guests);
+            }}
+            minGuests={1}
+            maxGuests={6}
+            step={1}
+            colorMin={"#420350ff"}
+            colorMax={"#420350ff"}
+          />
         </View>
       </View>
 
-      <View style={{marginTop: spacing.base }}>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ 
-            paddingLeft: spacing.lg, 
-            paddingRight: spacing.lg, 
-            paddingTop: spacing.lg, 
-            paddingBottom: spacing.xxxl * 2.5 
-          }}>
-          {Array.from({ length: 5 }).map((_, index) => (
-            <RenderRoomCard key={`room-${index}`} />
-          ))}
-        </ScrollView>
-      </View>
+      {/* ROOM CARD */}
+      <RoomCard
+      />
     </AuthContainer>
   );
 };
 
 export default RenderExplorer;
-
