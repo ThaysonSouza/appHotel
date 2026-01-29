@@ -9,6 +9,7 @@ import { global } from "../ui/styles";
 
 const RenderExplorer = () => {
   const { width } = Dimensions.get("window");
+  //useState() para gerenciar e alterar os estados
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [qntGuests, setQntGuests] = useState<number>(1);
@@ -18,7 +19,6 @@ const RenderExplorer = () => {
   return (
     <AuthContainer>
       <View style={{ display: "flex", justifyContent: "center" }}>
-        
         {/* CHECK-IN */}
         <View style={{ display: "flex", flexDirection: "column" }}>
           <TouchableOpacity onPress={() => setCalendar("checkin")}>
@@ -47,40 +47,43 @@ const RenderExplorer = () => {
           </TouchableOpacity>
         </View>
 
-        <Modal transparent
-        animationType="fade"
-        visible={calendar !== null}
-        onRequestClose={closeCalendar}
+        {/* Modal para fechar calendário ao clicar fora */}
+        <Modal
+          transparent
+          animationType="fade"
+          visible={calendar !== null}
+          onRequestClose={closeCalendar}
         >
-          {/*Backdrop: qualquer clique aqui fora, fecha*/}
+          {/* Backdrop: qualquer clique aqui fora, fecha */}
           <Pressable
-          style={global.modalView}
-           onPress={closeCalendar}>
-            {/*Area do calendario que ao clicar, nao o fecha */}
-            
-            <Pressable onPress={() => {}}>
-               {calendar === "checkin" && (
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "rgba(0,0,0, 0.29)",
+            }}
+            onPress={closeCalendar}
+          >
+            {/* Área do calendário que, ao clicar, não o fecha */}
+            <Pressable onPress={() => { }}>
+              {calendar === "checkin" && (
                 <DateSelector
-                onSelectDate={(date) => {
-                  setCheckIn(date);
-                  closeCalendar();
-              }}
-              />
-            )}
-
+                  onSelectDate={(date) => {
+                    setCheckIn(date);
+                    closeCalendar();
+                  }}
+                />
+              )}
               {calendar === "checkout" && (
-              <DateSelector
-              onSelectDate={(date) => {
-                setCheckOut(date);
-                closeCalendar();
-              }}
-            />
-          )}
-          
+                <DateSelector
+                  onSelectDate={(date) => {
+                    setCheckOut(date);
+                    closeCalendar();
+                  }}
+                />
+              )}
             </Pressable>
-
           </Pressable>
-
         </Modal>
 
         {/* QUANTIDADE DE HÓSPEDES */}
@@ -102,6 +105,12 @@ const RenderExplorer = () => {
 
       {/* ROOM CARD */}
       <RoomCard
+        image={require("../../../assets/images/suiteJunior.jpg")}
+        label="Suite Junior"
+        icon={{
+          lib: "FontAwesome5",
+          name: "bed",
+        }}
       />
     </AuthContainer>
   );

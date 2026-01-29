@@ -1,11 +1,10 @@
 import { useRouter } from "expo-router";
-import { Text, TouchableOpacity, View } from "react-native";
+import { useMemo, useState } from "react";
+import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
 import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
-import { useMemo, useState } from "react";
-import { Alert } from "react-native";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -23,15 +22,12 @@ const RenderLogin = () => {
 
   const errors = useMemo(() => {
     const error: Record<string, string> = {};
-
     if (touched.email && !email) error.email = "E-mail obrigatório";
+    if (touched.password && !password) error.password = "Senha obrigatória";
+    if (touched.password && password && password.length < 6)
+      error.password = "No mínimo 6 caracteres para a senha";
     if (touched.email && email && !isValidEmail(email))
       error.email = "Digite um e-mail válido";
-
-    if (touched.password && !password) error.password = "Senha obrigatória";
-    if (touched.password && password.length < 6)
-      error.password = "No mínimo 6 caracteres";
-
     return error;
   }, [email, password, touched]);
 
@@ -41,71 +37,87 @@ const RenderLogin = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      console.log("[LOGIN]  Tentando login com: ", {
+      console.log("[LOGIN] Tentando login com: ", {
         email: email,
-        password: password
+        password: password,
       });
       await new Promise((req) => setTimeout(req, 2000));
-      if (email === "t@t.c" && password === "123") {
-        Alert.alert("login realizado!!");
+      if (email === "pamellapereto@gmail.com" && password === "123") {
+        Alert.alert("Login bem-sucedido!");
         router.replace("/(tabs)/explorer");
-      }else{
-        Alert.alert("login invalido!");
+      } else {
+        Alert.alert("Login inválido!");
         return;
       }
-    } catch (erro){
-      Alert.alert("Erro", "Falha ao tentar logar. Tente novamente")
-    }
-    finally{
+    } catch (erro) {
+      Alert.alert("Erro", "Falha ao tentar logar!");
+    } finally {
       setLoading(false);
     }
   };
 
+  const { width, height } = Dimensions.get("window");
   return (
     <AuthContainer
       title="Bem-vindo"
       subtitle="Faça seu login para continuar!"
       icon="hotel"
     >
-      <TextField
-        label="E-mail"
-        icon={{ lib: "MaterialIcons", name: "email" }}
-        placeholder="user@email.com"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={(input) => setEmail(input)}
-        errorText={errors.email}
-      />
+      <View style={global.content}>
+        <TextField
+          label="E-mail"
+          icon={{ lib: "MaterialIcons", name: "email" }}
+          placeholder="user@email.com"
+          value={email}
+          onChangeText={(input) => setEmail(input)}
+          onBlur={() => setTouched({ ...touched, email: true })}
+          errorText={errors.email}
+          keyboardType="email-address"
+        />
 
-      <PasswordField
-        label="Senha"
-        icon={{ lib: "MaterialIcons", name: "lock" }}
-        placeholder="*********"
-        value={password}
-        onChangeText={(input) => setPassword(input)}
-        errorText={errors.password}
-      />
-
-      <TouchableOpacity
-        style={[global.primaryButton]}
-        disabled={!canSubmit}
-        onPress={handleSubmit}
-      >
-        <Text style={global.primaryButtonText}>Login</Text>
-      </TouchableOpacity>
-
-      <View style={global.authLinks}>
-        <TouchableOpacity onPress={() => router.push("/(auth)/resetPassword")}>
-          <Text style={global.inlineLink}>Esqueci minha senha</Text>
+        <PasswordField
+          label="Senha"
+          icon={{ lib: "MaterialIcons", name: "lock" }}
+          placeholder="*********"
+          value={password}
+          onChangeText={(input) => setPassword(input)}
+          onBlur={() => setTouched({ ...touched, password: true })}
+          errorText={errors.password}
+        />
+        <TouchableOpacity
+          style={[global.primaryButton]}
+          onPress={handleSubmit}
+          disabled={!canSubmit}
+        >
+          <Text style={global.primaryButtonText}>Entrar</Text>
         </TouchableOpacity>
 
-        <View style={global.divider} />
-
-        <TouchableOpacity onPress={() => router.push("/(auth)/register")}>
-          <Text style={global.inlineLink}>
-            Não possui uma conta?{"\n"}Cadastre-se agora!
-          </Text>
-        </TouchableOpacity>
+        <View style={{ alignItems: "center", marginTop: height * 0.03 }}>
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/resetPassword")}
+          >
+            <Text style={{ color: "#420350ff", fontSize: 17, fontWeight: "600" }}>
+              Esqueci minha senha
+            </Text>
+          </TouchableOpacity>
+          <View
+            style={{
+              backgroundColor: "#7c8390ff",
+              width: width * 0.5,
+              height: height * 0.001,
+              borderRadius: 10,
+              marginTop: height * 0.03,
+            }}
+          />
+          <TouchableOpacity
+            onPress={() => router.push("/(auth)/register")}
+            style={{ marginTop: height * 0.03 }}
+          >
+            <Text style={{ color: "#1f1e1eff", fontWeight: "600", fontSize: 17 }}>
+              Não possui uma conta? Cadastre-se agora!
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </AuthContainer>
   );

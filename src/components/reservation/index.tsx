@@ -48,12 +48,12 @@ const RenderReservation = () => {
       if (prev.includes(roomId)) {
         return prev.filter((id) => id !== roomId);
       }
-      
+
       // Se está marcando e já tem 2 selecionados, não permite
       if (prev.length >= 2) {
         return prev;
       }
-      
+
       // Adiciona o quarto
       return [...prev, roomId];
     });
@@ -111,10 +111,12 @@ const RenderReservation = () => {
                 >
                   <View style={{ opacity: isDisabled ? 0.5 : 1 }}>
                     <RenderRoomCard
-                      roomName={room.name}
-                      price={`R$ ${room.price.toFixed(2)}`}
-                      imageUri={room.imageUri}
-                      onPress={() => {}}
+                      label={room.name}
+                      image={{ uri: room.imageUri }}
+                      description={{
+                        text: "Preço por noite",
+                        price: room.price,
+                      }}
                     />
                   </View>
                   <View
