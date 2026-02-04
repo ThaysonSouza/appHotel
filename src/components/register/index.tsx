@@ -6,6 +6,7 @@ import TextField from "../ui/TextField";
 import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
 import { useMemo, useState } from "react";
+import { formatWithMask } from "react-native-mask-input";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -15,9 +16,18 @@ function isValidPhone(telefone: string) {
   return /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/.test(telefone);
 }
 
+// Máscaras
+const CPF_MASK = [
+  /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/,
+];
+
+const PHONE_MASK = [ 
+  "(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/,
+];
+
 const RenderRegister = () => {
   const router = useRouter();
-
+  const [cpf, setCpf] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [telefone, setTelefone] = useState("");
@@ -110,15 +120,35 @@ const RenderRegister = () => {
         onChangeText={(input) => setEmail(input)}
         errorText={errors.email}
       />
+      
+      <TextField
+          label="Telefone"
+          value={telefone}
+          onChangeText={(text) => {
+            const { masked } = formatWithMask({
+              text,
+              mask: PHONE_MASK,
+            });
+            setTelefone(masked);
+          }}
+          icon={{ lib: "MaterialIcons", name: "phone" }}
+          placeholder="(00) 00000-0000"
+          keyboardType="numeric"
+      />
 
       <TextField
-        label="Telefone"
-        placeholder="(11) 99999-9999"
-        keyboardType="phone-pad"
-        icon={{ lib: "MaterialIcons", name: "phone" }}
-        value={telefone}
-        onChangeText={(input) => setTelefone(input)}
-        errorText={errors.phone}
+        label="CPF"
+        value={cpf}
+        onChangeText={(text) => {
+          const { masked } = formatWithMask({
+            text,
+            mask: CPF_MASK,
+          });
+          setCpf(masked);
+        }}
+        icon={{ lib: "MaterialIcons", name: "badge" }}
+        placeholder="000.000.000-00"
+        keyboardType="numeric"
       />
 
       <PasswordField

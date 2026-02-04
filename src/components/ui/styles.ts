@@ -177,7 +177,7 @@ export const global = StyleSheet.create({
         borderRadius: borderRadius.xxxl,
         width: "100%",
         padding: spacing.xl,
-        alignItems: "center",
+        // alignItems: "center",
         shadowColor: colors.deepPurple,
         shadowOffset: {
             width: 0,

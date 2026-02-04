@@ -148,14 +148,11 @@ const RenderAccount = () => {
       >
         <View style={global.centerView}>
           <View style={global.modalView}>
-            <Text
-              style={[
-                global.title,
-                { fontSize: 20, marginBottom: spacing.base },
-              ]}
-            >
-              Alterar Senha
-            </Text>
+            <Text style={[
+              global.title,
+              { fontSize: 20, marginBottom: spacing.base, textAlign: "center" },
+            ]}
+            > Alterar Senha </Text>
 
             <PasswordField
               label="Senha Antiga"
