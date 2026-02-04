@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Dimensions, Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from "react";
+import { Dimensions, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import DateSelector from "../ui/DateSelector";
 import InputSpin from "../ui/InputSpin";
 import RoomCard from "../ui/RoomCard";
 import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
+import { spacing } from "../ui/designTokens";
 
 const RenderExplorer = () => {
   const { width } = Dimensions.get("window");
@@ -87,7 +88,7 @@ const RenderExplorer = () => {
         </Modal>
 
         {/* QUANTIDADE DE HÓSPEDES */}
-        <View>
+        <View >
           <Text style={global.label}>Quantidade de hóspedes</Text>
           <InputSpin
             guests={qntGuests}
@@ -103,8 +104,20 @@ const RenderExplorer = () => {
         </View>
       </View>
 
-      {/* ROOM CARD */}
-      <RoomCard/>
+      <View style={{ flex: 1, marginTop: spacing.base }}>
+        <ScrollView
+          horizontal
+          contentContainerStyle={{ 
+            paddingLeft: spacing.lg, 
+            paddingRight: spacing.lg, 
+            paddingTop: spacing.lg, 
+            paddingBottom: spacing.xxxl * 5.0 
+          }}>
+          {Array.from({ length: 5 }).map((_, index) => (
+            <RoomCard key={`room-${index}`} />
+          ))}
+        </ScrollView>
+      </View>
     </AuthContainer>
   );
 };
