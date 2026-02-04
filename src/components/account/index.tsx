@@ -1,11 +1,5 @@
 import React, { useState } from "react";
-import {
-  Alert,
-  Modal,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Modal, Text, TouchableOpacity, View, } from "react-native";
 import { formatWithMask } from "react-native-mask-input";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
@@ -15,24 +9,11 @@ import { global } from "../ui/styles";
 
 // Máscaras
 const CPF_MASK = [
-  /\d/, /\d/, /\d/,
-  ".",
-  /\d/, /\d/, /\d/,
-  ".",
-  /\d/, /\d/, /\d/,
-  "-",
-  /\d/, /\d/,
+  /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/,
 ];
 
-const PHONE_MASK = [
-  "(",
-  /\d/, /\d/,
-  ")",
-  " ",
-  /\d/,
-  /\d/, /\d/, /\d/, /\d/,
-  "-",
-  /\d/, /\d/, /\d/, /\d/,
+const PHONE_MASK = [ 
+  "(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/,
 ];
 
 const RenderAccount = () => {

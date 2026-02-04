@@ -42,7 +42,7 @@ const RenderLogin = () => {
         password: password,
       });
       await new Promise((req) => setTimeout(req, 2000));
-      if (email === "pamellapereto@gmail.com" && password === "123") {
+      if (email === "thayson@gmail.com" && password === "123456") {
         Alert.alert("Login bem-sucedido!");
         router.replace("/(tabs)/explorer");
       } else {

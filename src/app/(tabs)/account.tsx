@@ -1,8 +1,8 @@
-import { Text } from 'react-native';
+import RenderAccount from "@/components/account";
 
 const RenderConta = () => {
   return (
-      <Text>minha conta</Text>
+     <RenderAccount />
   );
 };
 
