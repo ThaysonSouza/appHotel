@@ -104,14 +104,7 @@ const RenderExplorer = () => {
       </View>
 
       {/* ROOM CARD */}
-      <RoomCard
-        image={require("../../../assets/images/suiteJunior.jpg")}
-        label="Suite Junior"
-        icon={{
-          lib: "FontAwesome5",
-          name: "bed",
-        }}
-      />
+      <RoomCard/>
     </AuthContainer>
   );
 };

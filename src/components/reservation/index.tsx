@@ -110,13 +110,11 @@ const RenderReservation = () => {
                   style={{ position: "relative", marginRight: spacing.base }}
                 >
                   <View style={{ opacity: isDisabled ? 0.5 : 1 }}>
-                    <RenderRoomCard
-                      label={room.name}
-                      image={{ uri: room.imageUri }}
-                      description={{
-                        text: "Preço por noite",
-                        price: room.price,
-                      }}
+                   <RenderRoomCard
+                      roomName={room.name}
+                      price={`R$ ${room.price.toFixed(2)}`}
+                      imageUri={room.imageUri}
+                      onPress={() => {}}
                     />
                   </View>
                   <View
