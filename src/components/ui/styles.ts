@@ -321,4 +321,51 @@ export const global = StyleSheet.create({
         backgroundColor: colors.light,
         marginVertical: spacing.xs,
     },
+
+    
+    // ============================================
+    // ACCOUNT/PERFIL
+    // ============================================
+    
+    outlineButton: { 
+        paddingVertical: dimensions.buttonPaddingVertical,  
+        paddingHorizontal: dimensions.buttonPaddingHorizontal, 
+        borderRadius: borderRadius.pill,  borderWidth: 1.5,  
+        borderColor: colors.primary,  
+        alignItems: "center",  
+        justifyContent: "center",
+        backgroundColor: "transparent",
+    }, 
+    outlineButtonText: { 
+        color: colors.primary, 
+        fontSize: dimensions.iconSize.sm,
+        fontWeight: "700",  
+    }, 
+    modalButtons: {  
+        flexDirection: "row", 
+        justifyContent: "space-between", 
+        marginTop: spacing.lg,  gap: spacing.md,
+    },
+    modalButton: {  flex: 1,  
+        paddingVertical: spacing.md,
+        borderRadius: borderRadius.lg,  
+        alignItems: "center",  justifyContent: "center",
+    },
+    cancelButton: {
+        backgroundColor: colors.white, 
+        borderWidth: 1,  
+        borderColor: colors.disabled, 
+    }, 
+    saveButton: { 
+        backgroundColor: colors.primary,  
+    },
+    cancelButtonText: {
+        color: colors.textTertiary,   
+     }, 
+    saveButtonText: { 
+        color: colors.white, 
+        fontWeight: "bold", 
+    },
+
+
 });
