@@ -8,7 +8,7 @@ import AuthContainer from "../ui/AuthContainer";
 
 import PasswordField from "../ui/PasswordField";
 
-import TextField from "../ui/TextField";
+import TextField from "../ui/textField";
 
 import { global } from "../ui/styles";
 
