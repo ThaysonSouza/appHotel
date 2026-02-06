@@ -1,7 +1,19 @@
-import React from 'react';
-import { Pressable, Modal as RNModal, Text, TextStyle, View, ViewStyle } from 'react-native';
-import { borderRadius, colors, shadows, spacing, typography } from './designTokens';
-
+import React from "react";
+import {
+  Pressable,
+  Modal as RNModal,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
+import {
+  borderRadius,
+  colors,
+  shadows,
+  spacing,
+  typography,
+} from "./designTokens";
 type CustomModalProps = {
   visible: boolean;
   onClose: () => void;
@@ -9,7 +21,12 @@ type CustomModalProps = {
   children: React.ReactNode;
 };
 
-const CustomModal = ({ visible, onClose, title, children }: CustomModalProps) => {
+const CustomModal = ({
+  visible,
+  onClose,
+  title,
+  children,
+}: CustomModalProps) => {
   return (
     <RNModal
       animationType="fade"
@@ -17,21 +34,10 @@ const CustomModal = ({ visible, onClose, title, children }: CustomModalProps) =>
       visible={visible}
       onRequestClose={onClose}
     >
-      <Pressable 
-        style={styles.overlay}
-        onPress={onClose}
-      >
-        <Pressable 
-          style={styles.modalContainer}
-          onPress={() => {}}
-        >
+      <Pressable style={styles.overlay} onPress={onClose}>
+        <Pressable style={styles.modalContainer} onPress={() => {}}>
           <View style={styles.modalContent}>
-            {title && (
-              <Text style={styles.modalTitle}>
-                {title}
-              </Text>
-            )}
-            
+            {title && <Text style={styles.modalTitle}>{title}</Text>}
             {children}
           </View>
         </Pressable>
@@ -43,30 +49,29 @@ const CustomModal = ({ visible, onClose, title, children }: CustomModalProps) =>
 const styles = {
   overlay: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.35)',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0,0,0,0.35)",
   } as ViewStyle,
-  
+
   modalContainer: {
-    width: '90%',
+    width: "90%",
     maxWidth: 400,
   } as ViewStyle,
-  
+
   modalContent: {
     backgroundColor: colors.white,
     borderRadius: borderRadius.xxxl,
     padding: spacing.xl,
     ...shadows.lg,
   } as ViewStyle,
-  
+
   modalTitle: {
     fontSize: typography.size.xl,
     fontWeight: typography.weight.bold,
     color: colors.textPrimary,
-    textAlign: 'center',
+    textAlign: "center",
     marginBottom: spacing.base,
   } as TextStyle,
 };
-
 export default CustomModal;
