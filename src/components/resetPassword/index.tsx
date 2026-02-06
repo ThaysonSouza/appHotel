@@ -4,7 +4,7 @@ import { Alert, Text, TouchableOpacity, View } from "react-native";
 
 import AuthContainer from "../ui/AuthContainer";
 
-import TextField from "../ui/textField";
+import TextField from "../ui/TextField";
 
 import { global } from "../ui/styles";
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import TextField from "./textField";
+import TextField from "./TextField";
 
 import { TouchableOpacity, View } from "react-native";
 

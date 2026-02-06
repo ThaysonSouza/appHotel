@@ -6,7 +6,7 @@ import AuthContainer from "../ui/AuthContainer";
 
 import PasswordField from "../ui/PasswordField";
 
-import TextField from "../ui/textField";
+import TextField from "../ui/TextField";
 
 import { colors, spacing, typography } from "../ui/designTokens";
 
