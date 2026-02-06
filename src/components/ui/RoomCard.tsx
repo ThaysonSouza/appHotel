@@ -1,8 +1,8 @@
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
+import CustomModal from "./CustomModal";
 import { stylesRoom } from "./stylesRoom";
-import Modal from "./Modal";
-import { useRouter } from "expo-router";
 
 type RoomCardProps = {
   onPress?: () => void;
@@ -58,7 +58,7 @@ const RenderRoomCard = ({
         </View>
       </TouchableOpacity>
 
-      <Modal
+      <CustomModal
         visible={showDetails}
         onClose={() => setShowDetails(false)}
         title="Detalhes do Quarto"
@@ -95,7 +95,7 @@ const RenderRoomCard = ({
             </Text>
           </TouchableOpacity>
         </View>
-      </Modal>
+      </CustomModal>
     </>
   );
 };

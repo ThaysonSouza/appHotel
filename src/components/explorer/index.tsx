@@ -230,7 +230,19 @@ const RenderExplorer = () => {
 
           {Array.from({ length: 5 }).map((_, index) => (
 
-            <RoomCard key={`room-${index}`} />
+            <RoomCard 
+
+              key={`room-${index}`} 
+
+              roomName="Suite Junior"
+
+              beds={1}
+
+              price="R$ 150 por 1 noite"
+
+              imageUri="https://images.unsplash.com/photo-1505691938895-1758d7feb511"
+
+            />
 
           ))}
 
@@ -247,4 +259,3 @@ const RenderExplorer = () => {
 
 
 export default RenderExplorer;
-
