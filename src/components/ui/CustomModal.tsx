@@ -1,19 +1,6 @@
 import React from "react";
-import {
-  Pressable,
-  Modal as RNModal,
-  Text,
-  TextStyle,
-  View,
-  ViewStyle,
-} from "react-native";
-import {
-  borderRadius,
-  colors,
-  shadows,
-  spacing,
-  typography,
-} from "./designTokens";
+import { Pressable, Modal as RNModal, Text, TextStyle, View, ViewStyle, } from "react-native";
+import { borderRadius, colors, shadows, spacing, typography, } from "./designTokens";
 type CustomModalProps = {
   visible: boolean;
   onClose: () => void;
@@ -22,11 +9,7 @@ type CustomModalProps = {
 };
 
 const CustomModal = ({
-  visible,
-  onClose,
-  title,
-  children,
-}: CustomModalProps) => {
+  visible, onClose, title, children, }: CustomModalProps) => {
   return (
     <RNModal
       animationType="fade"

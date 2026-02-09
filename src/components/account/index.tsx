@@ -9,38 +9,11 @@ import { global } from "../ui/styles";
 
 // Máscaras
 const CPF_MASK = [
-  /\d/,
-  /\d/,
-  /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  "-",
-  /\d/,
-  /\d/,
+  /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/,
 ];
 
 const PHONE_MASK = [
-  "(",
-  /\d/,
-  /\d/,
-  ")",
-  " ",
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-  "-",
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
+  "(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/,
 ];
 
 const RenderAccount = () => {
@@ -49,7 +22,6 @@ const RenderAccount = () => {
   const [phone, setPhone] = useState("(11) 91234-5678");
   const [email, setEmail] = useState("fulano@example.com");
   const [password, setPassword] = useState("");
-
   const [modalVisible, setModalVisible] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -69,24 +41,18 @@ const RenderAccount = () => {
   const handleUpdatePassword = () => {
     if (!oldPassword || !newPassword) {
       Alert.alert("Erro", "Preencha todos os campos de senha.");
-
       return;
     }
 
     if (newPassword !== confirmPassword) {
       Alert.alert("Erro", "As senhas não coincidem.");
-
       return;
     }
 
     Alert.alert("Sucesso", "Senha alterada com sucesso!");
-
     setModalVisible(false);
-
     setOldPassword("");
-
     setNewPassword("");
-
     setConfirmPassword("");
   };
 
@@ -106,17 +72,14 @@ const RenderAccount = () => {
         />
 
         {/* CPF */}
-
         <TextField
           label="CPF"
           value={cpf}
           onChangeText={(text) => {
             const { masked } = formatWithMask({
               text,
-
               mask: CPF_MASK,
             });
-
             setCpf(masked);
           }}
           icon={{ lib: "MaterialIcons", name: "badge" }}
@@ -132,10 +95,8 @@ const RenderAccount = () => {
           onChangeText={(text) => {
             const { masked } = formatWithMask({
               text,
-
               mask: PHONE_MASK,
             });
-
             setPhone(masked);
           }}
           icon={{ lib: "MaterialIcons", name: "phone" }}
@@ -191,16 +152,13 @@ const RenderAccount = () => {
             <Text
               style={[
                 global.title,
-
                 {
                   fontSize: 20,
                   marginBottom: spacing.base,
                   textAlign: "center",
                 },
-              ]}
-            >
-              {" "}
-              Alterar Senha{" "}
+                ]}>
+              {" "}Alterar Senha{" "}
             </Text>
 
             <PasswordField
@@ -232,7 +190,7 @@ const RenderAccount = () => {
                 style={[global.modalButton, global.cancelButton]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text style={global.cancelButtonText}>Cancelar</Text>
+              <Text style={global.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity

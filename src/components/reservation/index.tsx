@@ -58,7 +58,7 @@ const RenderReservation = () => {
       return [...prev, roomId];
     });
   };
-
+  
   const selectedRoomsData = availableRooms.filter((room) =>
     selectedRooms.includes(room.id)
   );
