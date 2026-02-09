@@ -1,12 +1,20 @@
 import React, { useState } from "react";
 import { Dimensions, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
+import CustomModal from "../ui/CustomModal";
 import DateSelector from "../ui/DateSelector";
 import InputSpin from "../ui/InputSpin";
 import RoomCard from "../ui/RoomCard";
 import TextField from "../ui/TextField";
+import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
-import { spacing } from "../ui/designTokens";
+
+type RoomDetail = {
+  name: string;
+  price: string;
+  imageUri: string;
+  beds: number;
+};
 
 const RenderExplorer = () => {
   const { width } = Dimensions.get("window");
@@ -15,6 +23,7 @@ const RenderExplorer = () => {
   const [checkOut, setCheckOut] = useState("");
   const [qntGuests, setQntGuests] = useState<number>(1);
   const [calendar, setCalendar] = useState<"checkin" | "checkout" | null>(null);
+  const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
   const closeCalendar = () => setCalendar(null);
 
   return (
@@ -120,18 +129,56 @@ const RenderExplorer = () => {
             paddingBottom: spacing.xxxl * 5.0 
           }}>
 
-          {Array.from({ length: 5 }).map((_, index) => (
+          {Array.from({ length: 5 }).map((_, index) => {
+            const room = {
+              name: "Suite Junior",
+              beds: 1,
+              price: "R$ 150 por 1 noite",
+              imageUri: "https://images.unsplash.com/photo-1505691938895-1758d7feb511"
+            };
 
-            <RoomCard 
-              key={`room-${index}`} 
-              roomName="Suite Junior"
-              beds={1}
-              price="R$ 150 por 1 noite"
-              imageUri="https://images.unsplash.com/photo-1505691938895-1758d7feb511"
-            />
-          ))}
+            return (
+              <RoomCard 
+                key={`room-${index}`} 
+                roomName={room.name}
+                beds={room.beds}
+                price={room.price}
+                imageUri={room.imageUri}
+                onPress={() => setSelectedRoom(room)}
+              />
+            );
+          })}
         </ScrollView>
       </View>
+
+      <CustomModal
+        visible={selectedRoom !== null}
+        onClose={() => setSelectedRoom(null)}
+        title={selectedRoom?.name || ""}
+      >
+        <View style={{ alignItems: "center", paddingVertical: spacing.lg }}>
+          <Text style={{ fontSize: typography.size.lg, color: colors.textPrimary, marginBottom: spacing.base }}>
+            {selectedRoom?.price}
+          </Text>
+          <Text style={{ fontSize: typography.size.md, color: colors.textSecondary, marginBottom: spacing.lg }}>
+            {selectedRoom?.beds} {selectedRoom?.beds === 1 ? "cama" : "camas"}
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: colors.primary,
+              paddingVertical: spacing.md,
+              paddingHorizontal: spacing.xl,
+              borderRadius: spacing.lg,
+              marginTop: spacing.lg
+            }}
+            onPress={() => setSelectedRoom(null)}
+          >
+            <Text style={{ color: colors.white, fontWeight: "bold", fontSize: typography.size.md }}>
+              Fechar
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </CustomModal>
     </AuthContainer>
   );
 };
