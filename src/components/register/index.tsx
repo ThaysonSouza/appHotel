@@ -1,12 +1,13 @@
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
-import { Alert, Text, TouchableOpacity, View } from "react-native";
+import { useMemo, useState } from "react";
+import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from "react-native";
+import { formatWithMask } from "react-native-mask-input";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
 import TextField from "../ui/TextField";
 import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
-import { useMemo, useState } from "react";
-import { formatWithMask } from "react-native-mask-input";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -14,6 +15,17 @@ function isValidEmail(email: string) {
 
 function isValidPhone(telefone: string) {
   return /^\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/.test(telefone);
+}
+
+function isValidCPF(cpf: string): boolean {
+  // Remove máscara
+  const cleanCPF = cpf.replace(/\D/g, '');
+  // Verifica se tem 11 dígitos
+  if (cleanCPF.length !== 11) return false;
+  // Verifica se não é todos iguais
+  if (/^(\d)\1{10}$/.test(cleanCPF)) return false;
+  // Validação básica (pode melhorar com algoritmo de dígito verificador)
+  return true;
 }
 
 // Máscaras
@@ -27,6 +39,7 @@ const PHONE_MASK = [
 
 const RenderRegister = () => {
   const router = useRouter();
+  const { signUp } = useAuth();
   const [cpf, setCpf] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -52,6 +65,8 @@ const RenderRegister = () => {
     if (touched.phone && !telefone) error.phone = "Telefone obrigatório";
     if (touched.phone && telefone && !isValidPhone(telefone))
       error.phone = "Digite um telefone válido";
+    if (!cpf) error.cpf = "CPF obrigatório";
+    if (cpf && !isValidCPF(cpf)) error.cpf = "CPF inválido";
     if (touched.password && !password) error.password = "Senha obrigatória";
     if (touched.password && password.length < 6)
       error.password = "No mínimo 6 caracteres";
@@ -59,12 +74,13 @@ const RenderRegister = () => {
     if (touched.confirm && confirm !== password)
       error.confirm = "As senhas não coincidem";
     return error;
-  }, [name, email, telefone, password, confirm, touched]);
+  }, [name, email, telefone, cpf, password, confirm, touched]);
 
   const canSubmit =
     name &&
     email &&
     telefone &&
+    cpf &&
     password &&
     confirm &&
     Object.keys(errors).length === 0 &&
@@ -73,22 +89,18 @@ const RenderRegister = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      console.log("[REGISTER] Tentando criar este usuario: ", {
-        name: name,
-        email: email,
-        telefone: telefone,
-        password: password,
-        confirm: confirm,
-      });
-
-      await new Promise((req) => setTimeout(req, 2000));
-      Alert.alert("Cadastro realizado!!");
+      
+      // Remove máscaras
+      const cpfLimpo = cpf.replace(/\D/g, '');
+      const telefoneLimpo = telefone.replace(/\D/g, '');
+      
+      await signUp(name.trim(), email.trim(), telefoneLimpo, cpfLimpo, password);
+      
+      Alert.alert("Sucesso!", "Cadastro realizado! Bem-vindo ao app.");
       router.replace("/(tabs)/explorer");
-    } catch (error) {
-      Alert.alert("Erro", "Falha ao tentar Cadastrar. Tente novamente");
-    }
-
-    finally{
+    } catch (error: any) {
+      Alert.alert("Erro", error?.message || "Falha ao tentar cadastrar. Tente novamente");
+    } finally {
       setLoading(false);
     }
   };
@@ -146,9 +158,11 @@ const RenderRegister = () => {
           });
           setCpf(masked);
         }}
+        onBlur={() => setTouched({ ...touched, phone: true })}
         icon={{ lib: "MaterialIcons", name: "badge" }}
         placeholder="000.000.000-00"
         keyboardType="numeric"
+        errorText={errors.cpf}
       />
 
       <PasswordField
@@ -170,11 +184,15 @@ const RenderRegister = () => {
       />
 
       <TouchableOpacity
-        style={global.primaryButton}
+        style={[global.primaryButton, !canSubmit && { opacity: 0.6 }]}
         disabled={!canSubmit}
         onPress={handleSubmit}
       >
-        <Text style={global.primaryButtonText}>Criar conta</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={global.primaryButtonText}>Criar conta</Text>
+        )}
       </TouchableOpacity>
 
       <View style={{ alignItems: "center", marginTop: spacing.lg }}>

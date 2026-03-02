@@ -6,6 +6,7 @@ type AuthContextProps = {
     token: string | null;
     isLoading: boolean;
     signIn: (email: string, senha: string) => Promise<void>;
+    signUp: (name: string, email: string, telefone: string, cpf: string, senha: string) => Promise<void>;
     signOut: () => Promise<void>;
 };
 
@@ -43,13 +44,53 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(tokenAPI);
     }
 
+    async function signUp(name: string, email: string, telefone: string, cpf: string, senha: string) {
+        try {
+            const res = await fetch(`${API_URL}/login/cadastro`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    nome: name,
+                    cpf: cpf.replace(/\D/g, ""),
+                    telefone: telefone.replace(/\D/g, ""),
+                    email,
+                    senha,
+                }),
+            });
+
+            const text = await res.text();
+
+            if (!res.ok) {
+                console.log("STATUS:", res.status);
+                console.log("RESPOSTA:", text);
+                throw new Error("Erro ao cadastrar");
+            }
+
+            let tokenAPI: string;
+            try {
+                const data = JSON.parse(text);
+                tokenAPI = data.token ?? data;
+            } catch {
+                tokenAPI = text;
+            }
+
+            await AsyncStorage.setItem("token", tokenAPI);
+            setToken(tokenAPI);
+        } catch (error) {
+            console.log("ERRO SIGNUP:", error);
+            throw error;
+        }
+    }
+
     async function signOut() {
         await AsyncStorage.removeItem("token");
         setToken(null);
     }
     
     const value = useMemo(
-        () => ({ token, isLoading, signIn, signOut }),
+        () => ({ token, isLoading, signIn, signUp, signOut }),
         [token, isLoading],
     );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
