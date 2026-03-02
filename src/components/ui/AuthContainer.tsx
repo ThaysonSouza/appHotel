@@ -1,13 +1,7 @@
 import { Feather, FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import {
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+  KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View, } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, dimensions } from "./designTokens";
 import { global } from "./styles";
