@@ -1,11 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { createContext, useEffect, useState, useMemo } from "react";
-import {API_URL} from "../constants/api";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { API_URL } from "../constants/api";
 
 type AuthContextProps = {
     token: string | null;
     isLoading: boolean;
-    signIn: (email: string, password: string) => Promise<void>;
+    signIn: (email: string, senha: string) => Promise<void>;
     signOut: () => Promise<void>;
 };
 
@@ -35,8 +35,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             body: JSON.stringify({ email, senha }),
         });
         if(!res.ok){
-                const err = await res.json().catch(() => null);
-                throw new Error(err?.message || "Credenciais inválidas");
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.erro || "Credenciais inválidas");
         }
         const tokenAPI: string = await res.json();
         await AsyncStorage.setItem("token", tokenAPI);
@@ -56,3 +56,9 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 }
 
 export default AuthProvider;
+
+export const useAuth = () => {
+    const ctx = useContext(AuthContext);
+    if (!ctx) throw new Error("useAuth() deve ser usado dentro de AuthProvider");
+    return ctx;
+}

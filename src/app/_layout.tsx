@@ -1,5 +1,5 @@
-import { AuthProvider } from "@/context/AuthContext";
-import { Slot, Stack } from "expo-router";
+import AuthProvider from "@/context/AuthContext";
+import { Stack } from "expo-router";
 
 const RootLayout = () => {
     return (
