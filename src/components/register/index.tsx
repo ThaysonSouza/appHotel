@@ -94,7 +94,8 @@ const RenderRegister = () => {
       const cpfLimpo = cpf.replace(/\D/g, '');
       const telefoneLimpo = telefone.replace(/\D/g, '');
       
-      await signUp(name.trim(), email.trim(), telefoneLimpo, cpfLimpo, password);
+      // assincrono com ordem do contexto: nome, cpf, telefone, email, senha
+      await signUp(name.trim(), cpfLimpo, telefoneLimpo, email.trim(), password);
       
       Alert.alert("Sucesso!", "Cadastro realizado! Bem-vindo ao app.");
       router.replace("/(tabs)/explorer");
@@ -107,8 +108,8 @@ const RenderRegister = () => {
 
   return (
     <AuthContainer
-      title="Crie sua conta"
-      subtitle="Preencha os dados e comece a reservar!"
+      title="Criar Conta"
+      subtitle="Preencha os dados para se cadastrar"
       icon="user"
     >
 
@@ -184,14 +185,14 @@ const RenderRegister = () => {
       />
 
       <TouchableOpacity
-        style={[global.primaryButton, !canSubmit && { opacity: 0.6 }]}
-        disabled={!canSubmit}
+        style={[global.primaryButton, loading && { opacity: 0.7 }]}
+        disabled={loading}
         onPress={handleSubmit}
       >
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
         ) : (
-          <Text style={global.primaryButtonText}>Criar conta</Text>
+          <Text style={global.primaryButtonText}>Cadastrar</Text>
         )}
       </TouchableOpacity>
 

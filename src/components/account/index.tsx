@@ -1,3 +1,5 @@
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
 import { formatWithMask } from "react-native-mask-input";
@@ -17,6 +19,8 @@ const PHONE_MASK = [
 ];
 
 const RenderAccount = () => {
+  const { signOut } = useAuth();
+  const router = useRouter();
   const [name, setName] = useState("Fulano de Tal");
   const [cpf, setCpf] = useState("123.456.789-00");
   const [phone, setPhone] = useState("(11) 91234-5678");
@@ -136,6 +140,15 @@ const RenderAccount = () => {
           onPress={() => setModalVisible(true)}
         >
           <Text style={global.outlineButtonText}>Alterar senha</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[global.outlineButton, { marginTop: spacing.lg }]}
+          onPress={async () => {
+            await signOut();
+            router.replace("/(auth)");
+          }}
+        >
+          <Text style={global.outlineButtonText}>Sair</Text>
         </TouchableOpacity>
       </View>
 

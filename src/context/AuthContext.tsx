@@ -6,7 +6,8 @@ type AuthContextProps = {
     token: string | null;
     isLoading: boolean;
     signIn: (email: string, senha: string) => Promise<void>;
-    signUp: (name: string, email: string, telefone: string, cpf: string, senha: string) => Promise<void>;
+    // ordem: nome, cpf, telefone, email, senha
+    signUp: (nome: string, cpf: string, telefone: string, email: string, senha: string) => Promise<void>;
     signOut: () => Promise<void>;
 };
 
@@ -44,15 +45,15 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setToken(tokenAPI);
     }
 
-    async function signUp(name: string, email: string, telefone: string, cpf: string, senha: string) {
+    async function signUp(nome: string, cpf: string, telefone: string, email: string, senha: string) {
         try {
-            const res = await fetch(`${API_URL}/login/cadastro`, {
+            const res = await fetch(`${API_URL}/cadastro`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    nome: name,
+                    nome,
                     cpf: cpf.replace(/\D/g, ""),
                     telefone: telefone.replace(/\D/g, ""),
                     email,
