@@ -47,7 +47,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     async function signUp(nome: string, cpf: string, telefone: string, email: string, senha: string) {
         try {
-            const res = await fetch(`${API_URL}/cadastro`, {
+            const res = await fetch(`${API_URL}/login/cadastro`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
