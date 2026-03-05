@@ -1,13 +1,22 @@
-import React, { useState } from "react";
-import { Dimensions, Modal, Pressable, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import {
+    Alert,
+    Dimensions,
+    Modal,
+    Pressable,
+    ScrollView,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
+import { useAuth } from "../../context/AuthContext";
 import AuthContainer from "../ui/AuthContainer";
 import CustomModal from "../ui/CustomModal";
 import DateSelector from "../ui/DateSelector";
+import { colors, spacing, typography } from "../ui/designTokens";
 import InputSpin from "../ui/InputSpin";
 import RoomCard from "../ui/RoomCard";
-import TextField from "../ui/TextField";
-import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
+import TextField from "../ui/textField";
 
 type RoomDetail = {
   name: string;
@@ -24,12 +33,12 @@ const RenderExplorer = () => {
   const [qntGuests, setQntGuests] = useState<number>(1);
   const [calendar, setCalendar] = useState<"checkin" | "checkout" | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
+  const { consulta } = useAuth();
   const closeCalendar = () => setCalendar(null);
 
   return (
     <AuthContainer>
       <View style={{ display: "flex", justifyContent: "center" }}>
-
         {/* CHECK-IN */}
         <View style={{ display: "flex", flexDirection: "column" }}>
           <TouchableOpacity onPress={() => setCalendar("checkin")}>
@@ -66,7 +75,6 @@ const RenderExplorer = () => {
           visible={calendar !== null}
           onRequestClose={closeCalendar}
         >
-
           {/* Backdrop: qualquer clique aqui fora, fecha */}
           <Pressable
             style={{
@@ -77,9 +85,8 @@ const RenderExplorer = () => {
             }}
             onPress={closeCalendar}
           >
-
             {/* Área do calendário que, ao clicar, não o fecha */}
-            <Pressable onPress={() => { }}>
+            <Pressable onPress={() => {}}>
               {calendar === "checkin" && (
                 <DateSelector
                   onSelectDate={(date) => {
@@ -103,7 +110,7 @@ const RenderExplorer = () => {
 
         {/* QUANTIDADE DE HÓSPEDES */}
 
-        <View >
+        <View>
           <Text style={global.label}>Quantidade de hóspedes</Text>
           <InputSpin
             guests={qntGuests}
@@ -117,29 +124,66 @@ const RenderExplorer = () => {
             colorMax={"#420350ff"}
           />
         </View>
+
+        {/* BOTÃO CONSULTA */}
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={{
+            width: width * 0.8,
+            marginTop: spacing.md,
+            backgroundColor: colors.primary,
+            paddingVertical: 14,
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            alignSelf: "center",
+            elevation: 3,
+          }}
+          onPress={async () => {
+            try {
+              await consulta(checkIn, checkOut, qntGuests);
+            } catch (erro: any) {
+              Alert.alert(
+                "Nessas datas",
+                erro?.message || "Sem quartos disponiveis",
+              );
+            }
+          }}
+        >
+          <Text
+            style={{
+              color: "#FFF",
+              fontSize: 16,
+              fontWeight: "600",
+            }}
+          >
+            Consulta
+          </Text>
+        </TouchableOpacity>
       </View>
 
       <View style={{ flex: 1, marginTop: spacing.base }}>
         <ScrollView
           horizontal
-          contentContainerStyle={{ 
-            paddingLeft: spacing.lg, 
-            paddingRight: spacing.lg, 
-            paddingTop: spacing.lg, 
-            paddingBottom: spacing.xxxl * 5.0 
-          }}>
-
+          contentContainerStyle={{
+            paddingLeft: spacing.lg,
+            paddingRight: spacing.lg,
+            paddingTop: spacing.lg,
+            paddingBottom: spacing.xxxl * 5.0,
+          }}
+        >
           {Array.from({ length: 5 }).map((_, index) => {
             const room = {
               name: "Suite Junior",
               beds: 1,
               price: "R$ 150 por 1 noite",
-              imageUri: "https://images.unsplash.com/photo-1505691938895-1758d7feb511"
+              imageUri:
+                "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
             };
 
             return (
-              <RoomCard 
-                key={`room-${index}`} 
+              <RoomCard
+                key={`room-${index}`}
                 roomName={room.name}
                 beds={room.beds}
                 price={room.price}
@@ -157,10 +201,22 @@ const RenderExplorer = () => {
         title={selectedRoom?.name || ""}
       >
         <View style={{ alignItems: "center", paddingVertical: spacing.lg }}>
-          <Text style={{ fontSize: typography.size.lg, color: colors.textPrimary, marginBottom: spacing.base }}>
+          <Text
+            style={{
+              fontSize: typography.size.lg,
+              color: colors.textPrimary,
+              marginBottom: spacing.base,
+            }}
+          >
             {selectedRoom?.price}
           </Text>
-          <Text style={{ fontSize: typography.size.md, color: colors.textSecondary, marginBottom: spacing.lg }}>
+          <Text
+            style={{
+              fontSize: typography.size.md,
+              color: colors.textSecondary,
+              marginBottom: spacing.lg,
+            }}
+          >
             {selectedRoom?.beds} {selectedRoom?.beds === 1 ? "cama" : "camas"}
           </Text>
           <TouchableOpacity
@@ -169,11 +225,17 @@ const RenderExplorer = () => {
               paddingVertical: spacing.md,
               paddingHorizontal: spacing.xl,
               borderRadius: spacing.lg,
-              marginTop: spacing.lg
+              marginTop: spacing.lg,
             }}
             onPress={() => setSelectedRoom(null)}
           >
-            <Text style={{ color: colors.white, fontWeight: "bold", fontSize: typography.size.md }}>
+            <Text
+              style={{
+                color: colors.white,
+                fontWeight: "bold",
+                fontSize: typography.size.md,
+              }}
+            >
               Fechar
             </Text>
           </TouchableOpacity>

@@ -9,6 +9,7 @@ type AuthContextProps = {
     // ordem: nome, cpf, telefone, email, senha
     signUp: (nome: string, cpf: string, telefone: string, email: string, senha: string) => Promise<void>;
     signOut: () => Promise<void>;
+    consulta: (inicio: string, fim: string, quantidade: number) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined)
@@ -89,9 +90,27 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         await AsyncStorage.removeItem("token");
         setToken(null);
     }
+
+    async function consulta(inicio: string, fim: string, quantidade: number) {
+        const res = await fetch(`${API_URL}/quartosDisponiveis`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ inicio, fim, quantidade }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.message || "Sem quartos disponiveis");
+        }
+
+        const json = await res.json();
+        console.log(json);
+    }
     
     const value = useMemo(
-        () => ({ token, isLoading, signIn, signUp, signOut }),
+        () => ({ token, isLoading, signIn, signUp, signOut, consulta }),
         [token, isLoading],
     );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

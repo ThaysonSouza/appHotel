@@ -1,9 +1,9 @@
 import { useRouter } from "expo-router";
+import { useMemo, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
-import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
-import { useMemo, useState } from "react";
+import TextField from "../ui/textField";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -23,8 +23,7 @@ const RenderResetPassword = () => {
     return error;
   }, [email, touched]);
 
-  const canSubmit =
-    email && Object.keys(errors).length === 0 && !loading;
+  const canSubmit = email && Object.keys(errors).length === 0 && !loading;
 
   const handleSubmit = async () => {
     try {
@@ -37,16 +36,13 @@ const RenderResetPassword = () => {
       if (email === "t@t.c") {
         Alert.alert("Codigo enviado!!");
         router.back();
-      }else{
+      } else {
         Alert.alert("Email invalido!!");
         return;
       }
-
-    } catch (erro){
+    } catch (erro) {
       Alert.alert("Erro", "Falha ao tentar enviar codigo. Tente novamente");
-    }
-
-    finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -58,7 +54,6 @@ const RenderResetPassword = () => {
       icon="lock"
       onBack={() => router.back()}
     >
-
       <TextField
         label="Seu e-mail"
         icon={{ lib: "MaterialIcons", name: "email" }}

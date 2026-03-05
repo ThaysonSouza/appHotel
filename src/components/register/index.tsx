@@ -1,13 +1,19 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import { useMemo, useState } from "react";
-import { ActivityIndicator, Alert, Text, TouchableOpacity, View } from "react-native";
+import {
+    ActivityIndicator,
+    Alert,
+    Text,
+    TouchableOpacity,
+    View,
+} from "react-native";
 import { formatWithMask } from "react-native-mask-input";
 import AuthContainer from "../ui/AuthContainer";
-import PasswordField from "../ui/PasswordField";
-import TextField from "../ui/TextField";
 import { colors, spacing, typography } from "../ui/designTokens";
+import PasswordField from "../ui/PasswordField";
 import { global } from "../ui/styles";
+import TextField from "../ui/textField";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -19,7 +25,7 @@ function isValidPhone(telefone: string) {
 
 function isValidCPF(cpf: string): boolean {
   // Remove máscara
-  const cleanCPF = cpf.replace(/\D/g, '');
+  const cleanCPF = cpf.replace(/\D/g, "");
   // Verifica se tem 11 dígitos
   if (cleanCPF.length !== 11) return false;
   // Verifica se não é todos iguais
@@ -30,11 +36,38 @@ function isValidCPF(cpf: string): boolean {
 
 // Máscaras
 const CPF_MASK = [
-  /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
 ];
 
-const PHONE_MASK = [ 
-  "(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/,
+const PHONE_MASK = [
+  "(",
+  /\d/,
+  /\d/,
+  ")",
+  " ",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
 ];
 
 const RenderRegister = () => {
@@ -89,18 +122,27 @@ const RenderRegister = () => {
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      
+
       // Remove máscaras
-      const cpfLimpo = cpf.replace(/\D/g, '');
-      const telefoneLimpo = telefone.replace(/\D/g, '');
-      
+      const cpfLimpo = cpf.replace(/\D/g, "");
+      const telefoneLimpo = telefone.replace(/\D/g, "");
+
       // assincrono com ordem do contexto: nome, cpf, telefone, email, senha
-      await signUp(name.trim(), cpfLimpo, telefoneLimpo, email.trim(), password);
-      
+      await signUp(
+        name.trim(),
+        cpfLimpo,
+        telefoneLimpo,
+        email.trim(),
+        password,
+      );
+
       Alert.alert("Sucesso!", "Cadastro realizado! Bem-vindo ao app.");
       router.replace("/(tabs)/explorer");
     } catch (error: any) {
-      Alert.alert("Erro", error?.message || "Falha ao tentar cadastrar. Tente novamente");
+      Alert.alert(
+        "Erro",
+        error?.message || "Falha ao tentar cadastrar. Tente novamente",
+      );
     } finally {
       setLoading(false);
     }
@@ -112,7 +154,6 @@ const RenderRegister = () => {
       subtitle="Preencha os dados para se cadastrar"
       icon="user"
     >
-
       <TextField
         label="Nome completo"
         placeholder="Digite seu nome"
@@ -135,18 +176,18 @@ const RenderRegister = () => {
       />
 
       <TextField
-          label="Telefone"
-          value={telefone}
-          onChangeText={(text) => {
-            const { masked } = formatWithMask({
-              text,
-              mask: PHONE_MASK,
-            });
-            setTelefone(masked);
-          }}
-          icon={{ lib: "MaterialIcons", name: "phone" }}
-          placeholder="(00) 00000-0000"
-          keyboardType="numeric"
+        label="Telefone"
+        value={telefone}
+        onChangeText={(text) => {
+          const { masked } = formatWithMask({
+            text,
+            mask: PHONE_MASK,
+          });
+          setTelefone(masked);
+        }}
+        icon={{ lib: "MaterialIcons", name: "phone" }}
+        placeholder="(00) 00000-0000"
+        keyboardType="numeric"
       />
 
       <TextField

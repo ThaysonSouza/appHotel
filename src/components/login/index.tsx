@@ -4,22 +4,20 @@ import { useMemo, useState } from "react";
 import { Alert, Dimensions, Text, TouchableOpacity, View } from "react-native";
 import AuthContainer from "../ui/AuthContainer";
 import PasswordField from "../ui/PasswordField";
-import TextField from "../ui/TextField";
 import { global } from "../ui/styles";
+import TextField from "../ui/textField";
 
 function isValidEmail(email: string) {
   return /^[^\s@&='"!]+@[^\s@&='"!]+\.[^\s@&='"!]+$/.test(email);
 }
 
 const RenderLogin = () => {
-
   const { signIn } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [touched, setTouched] = useState<{
-
     email?: boolean;
     password?: boolean;
   }>({});
@@ -58,7 +56,6 @@ const RenderLogin = () => {
       subtitle="Faça seu login para continuar!"
       icon="hotel"
     >
-
       <View style={global.content}>
         <TextField
           label="E-mail"
@@ -93,7 +90,9 @@ const RenderLogin = () => {
           <TouchableOpacity
             onPress={() => router.push("/(auth)/resetPassword")}
           >
-            <Text style={{ color: "#420350ff", fontSize: 17, fontWeight: "600" }}>
+            <Text
+              style={{ color: "#420350ff", fontSize: 17, fontWeight: "600" }}
+            >
               Esqueci minha senha
             </Text>
           </TouchableOpacity>
@@ -112,7 +111,9 @@ const RenderLogin = () => {
             onPress={() => router.push("/(auth)/register")}
             style={{ marginTop: height * 0.03 }}
           >
-            <Text style={{ color: "#1f1e1eff", fontWeight: "600", fontSize: 17 }}>
+            <Text
+              style={{ color: "#1f1e1eff", fontWeight: "600", fontSize: 17 }}
+            >
               Não possui uma conta? Cadastre-se agora!
             </Text>
           </TouchableOpacity>

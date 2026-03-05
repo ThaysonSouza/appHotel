@@ -4,18 +4,45 @@ import React, { useState } from "react";
 import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
 import { formatWithMask } from "react-native-mask-input";
 import AuthContainer from "../ui/AuthContainer";
-import PasswordField from "../ui/PasswordField";
-import TextField from "../ui/TextField";
 import { spacing } from "../ui/designTokens";
+import PasswordField from "../ui/PasswordField";
 import { global } from "../ui/styles";
+import TextField from "../ui/textField";
 
 // Máscaras
 const CPF_MASK = [
-  /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  ".",
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
 ];
 
 const PHONE_MASK = [
-  "(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/,
+  "(",
+  /\d/,
+  /\d/,
+  ")",
+  " ",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
+  "-",
+  /\d/,
+  /\d/,
+  /\d/,
+  /\d/,
 ];
 
 const RenderAccount = () => {
@@ -170,8 +197,10 @@ const RenderAccount = () => {
                   marginBottom: spacing.base,
                   textAlign: "center",
                 },
-                ]}>
-              {" "}Alterar Senha{" "}
+              ]}
+            >
+              {" "}
+              Alterar Senha{" "}
             </Text>
 
             <PasswordField
@@ -203,7 +232,7 @@ const RenderAccount = () => {
                 style={[global.modalButton, global.cancelButton]}
                 onPress={() => setModalVisible(false)}
               >
-              <Text style={global.cancelButtonText}>Cancelar</Text>
+                <Text style={global.cancelButtonText}>Cancelar</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
