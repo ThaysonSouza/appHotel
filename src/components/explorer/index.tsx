@@ -1,12 +1,13 @@
+import React, { useState } from "react";
 import {
-    Alert,
-    Dimensions,
-    Modal,
-    Pressable,
-    ScrollView,
-    Text,
-    TouchableOpacity,
-    View,
+  Alert,
+  Dimensions,
+  Modal,
+  Pressable,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
 import AuthContainer from "../ui/AuthContainer";
@@ -18,23 +19,41 @@ import RoomCard from "../ui/RoomCard";
 import { global } from "../ui/styles";
 import TextField from "../ui/textField";
 
-type RoomDetail = {
-  name: string;
-  price: string;
-  imageUri: string;
-  beds: number;
-};
-
 const RenderExplorer = () => {
   const { width } = Dimensions.get("window");
-  //useState() para gerenciar e alterar os estados
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [qntGuests, setQntGuests] = useState<number>(1);
   const [calendar, setCalendar] = useState<"checkin" | "checkout" | null>(null);
-  const [selectedRoom, setSelectedRoom] = useState<RoomDetail | null>(null);
-  const { consulta } = useAuth();
+  const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
+  const { consulta, availableRooms } = useAuth();
   const closeCalendar = () => setCalendar(null);
+
+  const handleSearch = async () => {
+    if (!checkIn || !checkOut) {
+      Alert.alert("Erro", "Por favor, selecione as datas de check-in e check-out.");
+      return;
+    }
+
+    // Comparação de datas (YYYY/MM/DD)
+    if (checkOut <= checkIn) {
+      Alert.alert("Erro", "A data de check-out deve ser posterior à data de check-in.");
+      return;
+    }
+
+    try {
+      await consulta(checkIn, checkOut, qntGuests);
+      if (availableRooms.length === 0) {
+        // Nota: availableRooms pode demorar um render para atualizar, 
+        // mas a consulta é awaitable. 
+      }
+    } catch (erro: any) {
+      Alert.alert(
+        "Busca",
+        erro?.message || "Erro ao realizar a busca de quartos."
+      );
+    }
+  };
 
   return (
     <AuthContainer>
@@ -48,13 +67,13 @@ const RenderExplorer = () => {
                 icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
                 placeholder="Selecione a data"
                 value={checkIn}
+                editable={false}
               />
             </View>
           </TouchableOpacity>
         </View>
 
         {/* CHECK-OUT */}
-
         <View style={{ display: "flex", flexDirection: "column" }}>
           <TouchableOpacity onPress={() => setCalendar("checkout")}>
             <View style={{ width: width * 0.8 }}>
@@ -63,6 +82,7 @@ const RenderExplorer = () => {
                 icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
                 placeholder="Selecione a data"
                 value={checkOut}
+                editable={false}
               />
             </View>
           </TouchableOpacity>
@@ -75,7 +95,6 @@ const RenderExplorer = () => {
           visible={calendar !== null}
           onRequestClose={closeCalendar}
         >
-          {/* Backdrop: qualquer clique aqui fora, fecha */}
           <Pressable
             style={{
               flex: 1,
@@ -85,8 +104,7 @@ const RenderExplorer = () => {
             }}
             onPress={closeCalendar}
           >
-            {/* Área do calendário que, ao clicar, não o fecha */}
-            <Pressable onPress={() => {}}>
+            <Pressable onPress={() => { }}>
               {calendar === "checkin" && (
                 <DateSelector
                   onSelectDate={(date) => {
@@ -109,7 +127,6 @@ const RenderExplorer = () => {
         </Modal>
 
         {/* QUANTIDADE DE HÓSPEDES */}
-
         <View>
           <Text style={global.label}>Quantidade de hóspedes</Text>
           <InputSpin
@@ -125,7 +142,7 @@ const RenderExplorer = () => {
           />
         </View>
 
-        {/* BOTÃO CONSULTA */}
+        {/* BOTÃO BUSCAR */}
         <TouchableOpacity
           activeOpacity={0.8}
           style={{
@@ -139,16 +156,7 @@ const RenderExplorer = () => {
             alignSelf: "center",
             elevation: 3,
           }}
-          onPress={async () => {
-            try {
-              await consulta(checkIn, checkOut, qntGuests);
-            } catch (erro: any) {
-              Alert.alert(
-                "Nessas datas",
-                erro?.message || "Sem quartos disponiveis",
-              );
-            }
-          }}
+          onPress={handleSearch}
         >
           <Text
             style={{
@@ -157,37 +165,33 @@ const RenderExplorer = () => {
               fontWeight: "600",
             }}
           >
-            Consulta
+            Buscar
           </Text>
         </TouchableOpacity>
       </View>
 
       <View style={{ flex: 1, marginTop: spacing.base }}>
+        <Text style={[global.label, { marginLeft: spacing.lg, marginBottom: 0 }]}>
+          {availableRooms.length > 0 ? "Quartos Disponíveis" : "Nenhum quarto encontrado"}
+        </Text>
         <ScrollView
           horizontal
+          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             paddingLeft: spacing.lg,
             paddingRight: spacing.lg,
-            paddingTop: spacing.lg,
+            paddingTop: spacing.sm,
             paddingBottom: spacing.xxxl * 5.0,
           }}
         >
-          {Array.from({ length: 5 }).map((_, index) => {
-            const room = {
-              name: "Suite Junior",
-              beds: 1,
-              price: "R$ 150 por 1 noite",
-              imageUri:
-                "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-            };
-
+          {availableRooms.map((room, index) => {
             return (
               <RoomCard
-                key={`room-${index}`}
-                roomName={room.name}
-                beds={room.beds}
-                price={room.price}
-                imageUri={room.imageUri}
+                key={`room-${room.id}-${index}`}
+                roomName={room.nome}
+                beds={room.camaCasal + room.camaSolteiro}
+                price={`R$ ${room.preco} por noite`}
+                imageUri={room.fotos && room.fotos.length > 0 ? room.fotos[0] : undefined}
                 onPress={() => setSelectedRoom(room)}
               />
             );
@@ -198,7 +202,7 @@ const RenderExplorer = () => {
       <CustomModal
         visible={selectedRoom !== null}
         onClose={() => setSelectedRoom(null)}
-        title={selectedRoom?.name || ""}
+        title={selectedRoom?.nome || ""}
       >
         <View style={{ alignItems: "center", paddingVertical: spacing.lg }}>
           <Text
@@ -208,7 +212,7 @@ const RenderExplorer = () => {
               marginBottom: spacing.base,
             }}
           >
-            {selectedRoom?.price}
+            R$ {selectedRoom?.preco} por noite
           </Text>
           <Text
             style={{
@@ -217,7 +221,7 @@ const RenderExplorer = () => {
               marginBottom: spacing.lg,
             }}
           >
-            {selectedRoom?.beds} {selectedRoom?.beds === 1 ? "cama" : "camas"}
+            Capacidade: {selectedRoom?.camaCasal * 2 + selectedRoom?.camaSolteiro} pessoas
           </Text>
           <TouchableOpacity
             style={{
