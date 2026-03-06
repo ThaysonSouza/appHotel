@@ -48,10 +48,12 @@ export const global = StyleSheet.create({
         textAlign: "center"
     },
     content: {
-        backgroundColor: colors.light,
-        borderRadius: borderRadius.xl,
-        padding: spacing.base,
-        ...shadows.md
+        backgroundColor: colors.white,
+        borderRadius: borderRadius.xxl,
+        padding: spacing.xl,
+        ...shadows.lg,
+        borderWidth: 1,
+        borderColor: colors.lighter,
     },
     divider: {
         height: 1,
@@ -177,15 +179,9 @@ export const global = StyleSheet.create({
         borderRadius: borderRadius.xxxl,
         width: "100%",
         padding: spacing.xl,
-        // alignItems: "center",
-        shadowColor: colors.deepPurple,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: spacing.xs,
-        elevation: 6,
+        ...shadows.lg,
+        borderWidth: 1,
+        borderColor: colors.lighter,
     },
 
     // ============================================
@@ -322,49 +318,56 @@ export const global = StyleSheet.create({
         marginVertical: spacing.xs,
     },
 
-    
+
     // ============================================
     // ACCOUNT/PERFIL
     // ============================================
-    
-    outlineButton: { 
-        paddingVertical: dimensions.buttonPaddingVertical,  
-        paddingHorizontal: dimensions.buttonPaddingHorizontal, 
-        borderRadius: borderRadius.pill,  borderWidth: 1.5,  
-        borderColor: colors.primary,  
-        alignItems: "center",  
+
+    outlineButton: {
+        paddingVertical: dimensions.buttonPaddingVertical,
+        paddingHorizontal: dimensions.buttonPaddingHorizontal,
+        borderRadius: borderRadius.pill,
+        borderWidth: 1.5,
+        borderColor: colors.primary,
+        alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "transparent",
-    }, 
-    outlineButtonText: { 
-        color: colors.primary, 
-        fontSize: dimensions.iconSize.sm,
-        fontWeight: "700",  
-    }, 
-    modalButtons: {  
-        flexDirection: "row", 
-        justifyContent: "space-between", 
-        marginTop: spacing.lg,  gap: spacing.md,
+        backgroundColor: colors.white,
+        ...shadows.sm,
     },
-    modalButton: {  flex: 1,  
-        paddingVertical: spacing.md,
-        borderRadius: borderRadius.lg,  
-        alignItems: "center",  justifyContent: "center",
+    outlineButtonText: {
+        color: colors.primary,
+        fontSize: typography.size.md,
+        fontWeight: typography.weight.bold,
+    },
+    modalButtons: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        marginTop: spacing.xl,
+        gap: spacing.md,
+    },
+    modalButton: {
+        flex: 1,
+        height: dimensions.buttonHeight,
+        borderRadius: borderRadius.pill,
+        alignItems: "center",
+        justifyContent: "center",
+        ...shadows.sm,
     },
     cancelButton: {
-        backgroundColor: colors.white, 
-        borderWidth: 1,  
-        borderColor: colors.disabled, 
-    }, 
-    saveButton: { 
-        backgroundColor: colors.primary,  
+        backgroundColor: colors.white,
+        borderWidth: 1,
+        borderColor: colors.disabled,
+    },
+    saveButton: {
+        backgroundColor: colors.primary,
     },
     cancelButtonText: {
-        color: colors.textTertiary,   
-     }, 
-    saveButtonText: { 
-        color: colors.white, 
-        fontWeight: "bold", 
+        color: colors.textTertiary,
+        fontWeight: typography.weight.semibold,
+    },
+    saveButtonText: {
+        color: colors.white,
+        fontWeight: typography.weight.bold,
     },
 
 

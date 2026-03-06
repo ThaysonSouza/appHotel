@@ -12,21 +12,33 @@ type Room = {
     fotos: string[];
 };
 
+type User = {
+    id: number;
+    nome: string;
+    email: string;
+    cpf: string;
+    telefone: string;
+};
+
 type AuthContextProps = {
     token: string | null;
+    user: User | null;
     isLoading: boolean;
     availableRooms: Room[];
     signIn: (email: string, senha: string) => Promise<void>;
-    // ordem: nome, cpf, telefone, email, senha
     signUp: (nome: string, cpf: string, telefone: string, email: string, senha: string) => Promise<void>;
     signOut: () => Promise<void>;
     consulta: (dataInicio: string, dataFim: string, quantidade: number) => Promise<void>;
+    getUserProfile: () => Promise<User>;
+    updatePassword: (senhaAtual: string, novaSenha: string) => Promise<void>;
+    updateProfile: (nome: string, email: string, telefone: string) => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const [token, setToken] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [availableRooms, setAvailableRooms] = useState<Room[]>([]);
 
@@ -40,6 +52,64 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
         })();
     }, []);
+
+    async function getUserProfile(): Promise<User> {
+        if (!token) throw new Error("Não autenticado");
+        const res = await fetch(`${API_URL}/perfil`, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.erro || "Erro ao buscar perfil");
+        }
+
+        const userData = await res.json();
+        setUser(userData);
+        return userData;
+    }
+
+    async function updatePassword(senhaAtual: string, novaSenha: string): Promise<void> {
+        if (!token) throw new Error("Não autenticado");
+        const res = await fetch(`${API_URL}/perfil/senha`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ senhaAtual, novaSenha })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.erro || "Erro ao atualizar senha");
+        }
+    }
+
+    async function updateProfile(nome: string, email: string, telefone: string): Promise<void> {
+        if (!token) throw new Error("Não autenticado");
+        const res = await fetch(`${API_URL}/perfil`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ nome, email, telefone: telefone.replace(/\D/g, "") })
+        });
+
+        if (!res.ok) {
+            const err = await res.json().catch(() => null);
+            throw new Error(err?.erro || "Erro ao atualizar perfil");
+        }
+
+        // Atualiza o estado local do usuário após sucesso
+        if (user) {
+            setUser({ ...user, nome, email, telefone });
+        }
+    }
 
     async function signIn(email: string, senha: string) {
         const res = await fetch(`${API_URL}/login`, {
@@ -101,6 +171,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     async function signOut() {
         await AsyncStorage.removeItem("token");
         setToken(null);
+        setUser(null);
     }
 
     async function consulta(dataInicio: string, dataFim: string, quantidade: number) {
@@ -122,8 +193,8 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const value = useMemo(
-        () => ({ token, isLoading, availableRooms, signIn, signUp, signOut, consulta }),
-        [token, isLoading, availableRooms],
+        () => ({ token, user, isLoading, availableRooms, signIn, signUp, signOut, consulta, getUserProfile, updatePassword, updateProfile }),
+        [token, user, isLoading, availableRooms],
     );
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

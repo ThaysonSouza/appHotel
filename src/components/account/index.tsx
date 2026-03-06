@@ -1,77 +1,87 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Alert, Modal, Text, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, Modal, Text, TouchableOpacity, View } from "react-native";
 import { formatWithMask } from "react-native-mask-input";
 import AuthContainer from "../ui/AuthContainer";
-import { spacing } from "../ui/designTokens";
+import { colors, spacing } from "../ui/designTokens";
 import PasswordField from "../ui/PasswordField";
 import { global } from "../ui/styles";
 import TextField from "../ui/textField";
 
 // Máscaras
-const CPF_MASK = [
-  /\d/,
-  /\d/,
-  /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  ".",
-  /\d/,
-  /\d/,
-  /\d/,
-  "-",
-  /\d/,
-  /\d/,
-];
-
-const PHONE_MASK = [
-  "(",
-  /\d/,
-  /\d/,
-  ")",
-  " ",
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-  "-",
-  /\d/,
-  /\d/,
-  /\d/,
-  /\d/,
-];
+const CPF_MASK = [/\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, ".", /\d/, /\d/, /\d/, "-", /\d/, /\d/];
+const PHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-", /\d/, /\d/, /\d/, /\d/];
 
 const RenderAccount = () => {
-  const { signOut } = useAuth();
+  const { signOut, getUserProfile, updatePassword, updateProfile, isLoading: isLoadingAuth } = useAuth();
   const router = useRouter();
-  const [name, setName] = useState("Fulano de Tal");
-  const [cpf, setCpf] = useState("123.456.789-00");
-  const [phone, setPhone] = useState("(11) 91234-5678");
-  const [email, setEmail] = useState("fulano@example.com");
-  const [password, setPassword] = useState("");
+
+  const [name, setName] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(true);
+
   const [modalVisible, setModalVisible] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const handleUpdateData = () => {
-    Alert.alert("Sucesso", "Dados atualizados com sucesso!");
-    console.log({
-      name,
-      cpf,
-      phone,
-      email,
-      password,
-    });
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const userData = await getUserProfile();
+        setName(userData.nome || "");
+        setEmail(userData.email || "");
+
+        // Formatar CPF e Telefone se vierem sem máscara
+        const { masked: maskedCpf } = formatWithMask({ text: userData.cpf || "", mask: CPF_MASK });
+        const { masked: maskedPhone } = formatWithMask({ text: userData.telefone || "", mask: PHONE_MASK });
+
+        setCpf(maskedCpf);
+        setPhone(maskedPhone);
+      } catch (error: any) {
+        Alert.alert("Erro", "Não foi possível carregar os dados do perfil.");
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, []);
+
+  if (loading || isLoadingAuth) {
+    return (
+      <AuthContainer title="Minha Conta" icon="user">
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </AuthContainer>
+    );
+  }
+
+  const handleUpdateData = async () => {
+    if (!name || !email || !phone) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      await updateProfile(name, email, phone);
+      Alert.alert("Sucesso", "Dados atualizados com sucesso!");
+    } catch (error: any) {
+      Alert.alert("Erro", error.message || "Erro ao atualizar dados.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleUpdatePassword = () => {
-    if (!oldPassword || !newPassword) {
-      Alert.alert("Erro", "Preencha todos os campos de senha.");
+  const handleUpdatePassword = async () => {
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
 
@@ -80,11 +90,16 @@ const RenderAccount = () => {
       return;
     }
 
-    Alert.alert("Sucesso", "Senha alterada com sucesso!");
-    setModalVisible(false);
-    setOldPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    try {
+      await updatePassword(oldPassword, newPassword);
+      Alert.alert("Sucesso", "Senha alterada com sucesso!");
+      setModalVisible(false);
+      setOldPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error: any) {
+      Alert.alert("Erro", error.message || "Erro ao atualizar senha.");
+    }
   };
 
   return (
@@ -106,16 +121,9 @@ const RenderAccount = () => {
         <TextField
           label="CPF"
           value={cpf}
-          onChangeText={(text) => {
-            const { masked } = formatWithMask({
-              text,
-              mask: CPF_MASK,
-            });
-            setCpf(masked);
-          }}
+          editable={false}
           icon={{ lib: "MaterialIcons", name: "badge" }}
-          placeholder="000.000.000-00"
-          keyboardType="numeric"
+          style={{ backgroundColor: colors.light, opacity: 0.7 }}
         />
 
         {/* TELEFONE COM TEXTFIELD */}
@@ -143,14 +151,6 @@ const RenderAccount = () => {
           placeholder="seuemail@exemplo.com"
           keyboardType="email-address"
           autoCapitalize="none"
-        />
-
-        <PasswordField
-          label="Senha"
-          value={password}
-          onChangeText={setPassword}
-          icon={{ lib: "MaterialIcons", name: "lock" }}
-          placeholder="********"
         />
 
         <TouchableOpacity
