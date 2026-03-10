@@ -1,84 +1,52 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { useState } from "react";
-import { ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { useCart } from "../../context/CartContext";
 import AuthContainer from "../ui/AuthContainer";
 import InfoReserva from "../ui/InfoReserva";
-import RenderRoomCard from "../ui/RoomCard";
-import { colors, dimensions, spacing, typography } from "../ui/designTokens";
+import { colors, spacing, typography } from "../ui/designTokens";
 import { global } from "../ui/styles";
-
-type Room = {
-  id: string;
-  name: string;
-  price: number;
-  imageUri: string;
-};
 
 const RenderReservation = () => {
   const router = useRouter();
+  const { cartItems, removeFromCart, clearCart } = useCart();
 
-  // Dados da reserva (em produção viria de um contexto/estado global)
-  const reservationData = {
-    checkIn: "15/01/2025",
-    checkOut: "18/01/2025",
-  };
-
-  // Lista de quartos disponíveis
-  const availableRooms: Room[] = [
-    {
-      id: "1",
-      name: "Suite Junior",
-      price: 150,
-      imageUri: "https://images.unsplash.com/photo-1505691938895-1758d7feb511",
-    },
-    {
-      id: "2",
-      name: "Suite Master",
-      price: 200,
-      imageUri: "https://images.unsplash.com/photo-1611892440504-42a792e24d32",
-    },
-  ];
-
-  const [selectedRooms, setSelectedRooms] = useState<string[]>(["1", "2"]); // Máximo 2 quartos selecionados
-
-  const toggleRoomSelection = (roomId: string) => {
-    setSelectedRooms((prev) => {
-      // Se está desmarcando, remove
-      if (prev.includes(roomId)) {
-        return prev.filter((id) => id !== roomId);
-      }
-
-      // Se está marcando e já tem 2 selecionados, não permite
-      if (prev.length >= 2) {
-        return prev;
-      }
-
-      // Adiciona o quarto
-      return [...prev, roomId];
-    });
-  };
-  
-  const selectedRoomsData = availableRooms.filter((room) =>
-    selectedRooms.includes(room.id)
-  );
-  const totalPrice = selectedRoomsData.reduce(
-    (sum, room) => sum + room.price,
-    0
-  );
+  const totalPrice = cartItems.reduce((sum, item) => sum + item.preco, 0);
 
   const handleConfirmReservation = () => {
-    // Lógica para confirmar reserva
+    if (cartItems.length === 0) return;
+
     console.log("Reserva confirmada:", {
-      ...reservationData,
-      rooms: selectedRoomsData,
+      rooms: cartItems,
       totalPrice,
     });
+    // Aqui viria a chamada para a API
+    clearCart();
+    router.replace("/(tabs)/explorer");
   };
+
+  if (cartItems.length === 0) {
+    return (
+      <AuthContainer title="Reserva" icon="briefcase">
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: spacing.xl }}>
+          <Feather name="shopping-cart" size={80} color={colors.lavender} style={{ marginBottom: spacing.lg }} />
+          <Text style={[global.title, { textAlign: "center", marginBottom: spacing.md }]}>
+            voce ainda nao tem quartos reservados
+          </Text>
+          <TouchableOpacity
+            style={[global.primaryButton, { width: "100%" }]}
+            onPress={() => router.push("/(tabs)/explorer")}
+          >
+            <Text style={global.primaryButtonText}>Reservar</Text>
+          </TouchableOpacity>
+        </View>
+      </AuthContainer>
+    );
+  }
 
   return (
     <AuthContainer
-      title="Sobre sua reserva"
+      title="Sua Reserva"
       subtitle="Revise os detalhes antes de confirmar"
       icon="briefcase"
     >
@@ -87,72 +55,54 @@ const RenderReservation = () => {
         contentContainerStyle={{ paddingBottom: spacing.xxxl * 2 }}
       >
         <View style={global.infoReservaContainer}>
-          <Text
-            style={[global.infoReservaTitle, { marginBottom: spacing.base }]}
-          >
-            Quartos Disponíveis ({selectedRooms.length} selecionados)
+          <Text style={[global.infoReservaTitle, { marginBottom: spacing.base }]}>
+            Itens no Carrinho ({cartItems.length})
           </Text>
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={{ paddingRight: spacing.base }}
-          >
-            {availableRooms.map((room) => {
-              const isSelected = selectedRooms.includes(room.id);
-              const isDisabled = !isSelected && selectedRooms.length >= 2;
-
-              return (
-                <TouchableOpacity
-                  key={room.id}
-                  onPress={() => toggleRoomSelection(room.id)}
-                  disabled={isDisabled}
-                  style={{ position: "relative", marginRight: spacing.base }}
-                >
-                  <View style={{ opacity: isDisabled ? 0.5 : 1 }}>
-                   <RenderRoomCard
-                      roomName={room.name}
-                      price={`R$ ${room.price.toFixed(2)}`}
-                      imageUri={room.imageUri}
-                      onPress={() => {}}
-                    />
-                  </View>
-                  <View
-                    style={{
-                      position: "absolute",
-                      top: spacing.sm,
-                      right: spacing.sm,
-                      backgroundColor: isSelected
-                        ? colors.primary
-                        : colors.white,
-                      borderRadius: spacing.lg,
-                      padding: spacing.xs,
-                      borderWidth: 2,
-                      borderColor: isSelected ? colors.primary : colors.light,
-                    }}
-                  >
-                    <Feather
-                      name={isSelected ? "check" : "square"}
-                      size={dimensions.iconSize.sm}
-                      color={isSelected ? colors.white : colors.textTertiary}
-                    />
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
-          </ScrollView>
+          {cartItems.map((item) => (
+            <View
+              key={`cart-item-${item.id}`}
+              style={{
+                flexDirection: "row",
+                backgroundColor: colors.white,
+                borderRadius: 12,
+                padding: spacing.md,
+                marginBottom: spacing.md,
+                borderWidth: 1,
+                borderColor: colors.lighter,
+                alignItems: "center"
+              }}
+            >
+              {item.imageUri && (
+                <Image
+                  source={{ uri: item.imageUri }}
+                  style={{ width: 60, height: 60, borderRadius: 8, marginRight: spacing.md }}
+                />
+              )}
+              <View style={{ flex: 1 }}>
+                <Text style={{ fontWeight: "bold", fontSize: 16, color: colors.textPrimary }}>{item.nome}</Text>
+                <Text style={{ fontSize: 14, color: colors.textSecondary }}>R$ {item.preco} / noite</Text>
+                {item.checkIn && (
+                  <Text style={{ fontSize: 12, color: colors.textTertiary }}>
+                    {item.checkIn} até {item.checkOut}
+                  </Text>
+                )}
+              </View>
+              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
+                <Feather name="trash-2" size={20} color={colors.errorText} />
+              </TouchableOpacity>
+            </View>
+          ))}
         </View>
 
-        {/* Informações da Reserva - Agora embaixo dos quartos */}
+        {/* Informações da Reserva */}
         <InfoReserva
-          dateCheckin={reservationData.checkIn}
-          dateCheckout={reservationData.checkOut}
+          dateCheckin={cartItems[0]?.checkIn || "-"}
+          dateCheckout={cartItems[0]?.checkOut || "-"}
           price={`R$ ${totalPrice.toFixed(2)}`}
         />
 
-        <View
-          style={[global.infoReservaContainer, { marginTop: spacing.base }]}
-        >
+        <View style={[global.infoReservaContainer, { marginTop: spacing.base }]}>
           <Text style={[global.infoReservaTitle, { marginBottom: spacing.md }]}>
             Política de Cancelamento
           </Text>
@@ -172,7 +122,7 @@ const RenderReservation = () => {
           style={[global.primaryButton, { marginTop: spacing.xl }]}
           onPress={handleConfirmReservation}
         >
-          <Text style={global.primaryButtonText}>Confirmar Reserva</Text>
+          <Text style={global.primaryButtonText}>Finalizar Reserva</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -182,7 +132,7 @@ const RenderReservation = () => {
           }}
           onPress={() => router.push("/(tabs)/explorer")}
         >
-          <Text style={global.inlineLink}>Voltar para busca</Text>
+          <Text style={global.inlineLink}>Continuar buscando</Text>
         </TouchableOpacity>
       </ScrollView>
     </AuthContainer>

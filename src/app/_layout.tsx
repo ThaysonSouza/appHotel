@@ -1,10 +1,13 @@
 import AuthProvider from "@/context/AuthContext";
+import { CartProvider } from "@/context/CartContext";
 import { Stack } from "expo-router";
 
 const RootLayout = () => {
     return (
         <AuthProvider>
-            <Stack screenOptions={{ headerShown: false }}/>
+            <CartProvider>
+                <Stack screenOptions={{ headerShown: false }} />
+            </CartProvider>
         </AuthProvider>
     );
 }

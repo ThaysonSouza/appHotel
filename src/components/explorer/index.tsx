@@ -10,8 +10,8 @@ import {
   View,
 } from "react-native";
 import { useAuth } from "../../context/AuthContext";
+import { useCart } from "../../context/CartContext";
 import AuthContainer from "../ui/AuthContainer";
-import CustomModal from "../ui/CustomModal";
 import DateSelector from "../ui/DateSelector";
 import { colors, spacing, typography } from "../ui/designTokens";
 import InputSpin from "../ui/InputSpin";
@@ -27,6 +27,7 @@ const RenderExplorer = () => {
   const [calendar, setCalendar] = useState<"checkin" | "checkout" | null>(null);
   const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
   const { consulta, availableRooms } = useAuth();
+  const { setSearchDates } = useCart();
   const closeCalendar = () => setCalendar(null);
 
   const handleSearch = async () => {
@@ -35,18 +36,14 @@ const RenderExplorer = () => {
       return;
     }
 
-    // Comparação de datas (YYYY/MM/DD)
     if (checkOut <= checkIn) {
       Alert.alert("Erro", "A data de check-out deve ser posterior à data de check-in.");
       return;
     }
 
     try {
+      setSearchDates(checkIn, checkOut);
       await consulta(checkIn, checkOut, qntGuests);
-      if (availableRooms.length === 0) {
-        // Nota: availableRooms pode demorar um render para atualizar, 
-        // mas a consulta é awaitable. 
-      }
     } catch (erro: any) {
       Alert.alert(
         "Busca",
@@ -55,196 +52,165 @@ const RenderExplorer = () => {
     }
   };
 
+  // Dados mockados para as seções de exploração
+  const popularRooms = [
+    { id: 101, nome: "Suíte Presidencial", preco: 500, fotos: ["https://images.unsplash.com/photo-1578683010236-d716f9a3f461"], camaCasal: 1, camaSolteiro: 0 },
+    { id: 102, nome: "Bangalô Luxo", preco: 350, fotos: ["https://images.unsplash.com/photo-1520250497591-112f2f40a3f4"], camaCasal: 1, camaSolteiro: 1 },
+  ];
+
+  const recommendedRooms = [
+    { id: 201, nome: "Quarto Família", preco: 280, fotos: ["https://images.unsplash.com/photo-1566665797739-1674de7a421a"], camaCasal: 2, camaSolteiro: 1 },
+    { id: 202, nome: "Suíte Executiva", preco: 400, fotos: ["https://images.unsplash.com/photo-1590490360182-c33d57733427"], camaCasal: 1, camaSolteiro: 0 },
+  ];
+
   return (
     <AuthContainer>
-      <View style={{ display: "flex", justifyContent: "center" }}>
-        {/* CHECK-IN */}
-        <View style={{ display: "flex", flexDirection: "column" }}>
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: spacing.xxxl * 2 }}>
+        <View style={{ display: "flex", justifyContent: "center", paddingHorizontal: spacing.lg }}>
+          <Text style={[global.title, { marginBottom: spacing.md, textAlign: "center" }]}>Encontre seu Refúgio</Text>
+
+          {/* CHECK-IN */}
           <TouchableOpacity onPress={() => setCalendar("checkin")}>
-            <View style={{ width: width * 0.8 }}>
-              <TextField
-                label="Check-in"
-                icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
-                placeholder="Selecione a data"
-                value={checkIn}
-                editable={false}
-              />
-            </View>
+            <TextField
+              label="Check-in"
+              icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
+              placeholder="Selecione a data"
+              value={checkIn}
+              editable={false}
+            />
           </TouchableOpacity>
-        </View>
 
-        {/* CHECK-OUT */}
-        <View style={{ display: "flex", flexDirection: "column" }}>
+          {/* CHECK-OUT */}
           <TouchableOpacity onPress={() => setCalendar("checkout")}>
-            <View style={{ width: width * 0.8 }}>
-              <TextField
-                label="Check-out"
-                icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
-                placeholder="Selecione a data"
-                value={checkOut}
-                editable={false}
-              />
-            </View>
+            <TextField
+              label="Check-out"
+              icon={{ lib: "FontAwesome5", name: "calendar-alt" }}
+              placeholder="Selecione a data"
+              value={checkOut}
+              editable={false}
+            />
+          </TouchableOpacity>
+
+          {/* QUANTIDADE DE HÓSPEDES */}
+          <View style={{ marginBottom: spacing.md }}>
+            <Text style={global.label}>Quantidade de hóspedes</Text>
+            <InputSpin
+              guests={qntGuests}
+              onSelectSpin={(guests) => setQntGuests(guests)}
+              minGuests={1}
+              maxGuests={6}
+              step={1}
+              colorMin={"#420350ff"}
+              colorMax={"#420350ff"}
+            />
+          </View>
+
+          {/* BOTÃO BUSCAR */}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={[global.primaryButton, { width: '100%', alignSelf: 'center' }]}
+            onPress={handleSearch}
+          >
+            <Text style={global.primaryButtonText}>Buscar Disponibilidade</Text>
           </TouchableOpacity>
         </View>
 
-        {/* Modal para fechar calendário ao clicar fora */}
-        <Modal
-          transparent
-          animationType="fade"
-          visible={calendar !== null}
-          onRequestClose={closeCalendar}
-        >
-          <Pressable
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "rgba(0,0,0, 0.29)",
-            }}
-            onPress={closeCalendar}
-          >
-            <Pressable onPress={() => { }}>
-              {calendar === "checkin" && (
-                <DateSelector
-                  onSelectDate={(date) => {
-                    setCheckIn(date);
-                    closeCalendar();
-                  }}
+        {/* SEÇÃO: QUARTOS DISPONÍVEIS (RESULTADO DA BUSCA) */}
+        {availableRooms.length > 0 && (
+          <View style={{ marginTop: spacing.xl }}>
+            <Text style={[global.label, { marginLeft: spacing.lg, fontSize: typography.size.xl, color: colors.primary }]}>
+              Quartos Disponíveis
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}
+            >
+              {availableRooms.map((room, index) => (
+                <RoomCard
+                  key={`room-avail-${room.id}-${index}`}
+                  id={room.id}
+                  roomName={room.nome}
+                  beds={room.camaCasal + room.camaSolteiro}
+                  price={room.preco}
+                  imageUri={room.fotos && room.fotos.length > 0 ? room.fotos[0] : undefined}
                 />
-              )}
+              ))}
+            </ScrollView>
+          </View>
+        )}
 
-              {calendar === "checkout" && (
-                <DateSelector
-                  onSelectDate={(date) => {
-                    setCheckOut(date);
-                    closeCalendar();
-                  }}
-                />
-              )}
-            </Pressable>
-          </Pressable>
-        </Modal>
-
-        {/* QUANTIDADE DE HÓSPEDES */}
-        <View>
-          <Text style={global.label}>Quantidade de hóspedes</Text>
-          <InputSpin
-            guests={qntGuests}
-            onSelectSpin={(guests) => {
-              setQntGuests(guests);
-            }}
-            minGuests={1}
-            maxGuests={6}
-            step={1}
-            colorMin={"#420350ff"}
-            colorMax={"#420350ff"}
-          />
-        </View>
-
-        {/* BOTÃO BUSCAR */}
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={{
-            width: width * 0.8,
-            marginTop: spacing.md,
-            backgroundColor: colors.primary,
-            paddingVertical: 14,
-            borderRadius: 10,
-            alignItems: "center",
-            justifyContent: "center",
-            alignSelf: "center",
-            elevation: 3,
-          }}
-          onPress={handleSearch}
-        >
-          <Text
-            style={{
-              color: "#FFF",
-              fontSize: 16,
-              fontWeight: "600",
-            }}
+        {/* SEÇÃO: POPULARES (APENAS EXPLORAÇÃO) */}
+        <View style={{ marginTop: spacing.xl }}>
+          <Text style={[global.label, { marginLeft: spacing.lg, fontSize: typography.size.xl }]}>Quartos Populares</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}
           >
-            Buscar
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-      <View style={{ flex: 1, marginTop: spacing.base }}>
-        <Text style={[global.label, { marginLeft: spacing.lg, marginBottom: 0 }]}>
-          {availableRooms.length > 0 ? "Quartos Disponíveis" : "Nenhum quarto encontrado"}
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingLeft: spacing.lg,
-            paddingRight: spacing.lg,
-            paddingTop: spacing.sm,
-            paddingBottom: spacing.xxxl * 5.0,
-          }}
-        >
-          {availableRooms.map((room, index) => {
-            return (
+            {popularRooms.map((room) => (
               <RoomCard
-                key={`room-${room.id}-${index}`}
+                key={`room-pop-${room.id}`}
                 roomName={room.nome}
                 beds={room.camaCasal + room.camaSolteiro}
-                price={`R$ ${room.preco} por noite`}
-                imageUri={room.fotos && room.fotos.length > 0 ? room.fotos[0] : undefined}
-                onPress={() => setSelectedRoom(room)}
+                price={room.preco}
+                imageUri={room.fotos[0]}
+                hideAddToCart={true}
               />
-            );
-          })}
-        </ScrollView>
-      </View>
-
-      <CustomModal
-        visible={selectedRoom !== null}
-        onClose={() => setSelectedRoom(null)}
-        title={selectedRoom?.nome || ""}
-      >
-        <View style={{ alignItems: "center", paddingVertical: spacing.lg }}>
-          <Text
-            style={{
-              fontSize: typography.size.lg,
-              color: colors.textPrimary,
-              marginBottom: spacing.base,
-            }}
-          >
-            R$ {selectedRoom?.preco} por noite
-          </Text>
-          <Text
-            style={{
-              fontSize: typography.size.md,
-              color: colors.textSecondary,
-              marginBottom: spacing.lg,
-            }}
-          >
-            Capacidade: {selectedRoom?.camaCasal * 2 + selectedRoom?.camaSolteiro} pessoas
-          </Text>
-          <TouchableOpacity
-            style={{
-              backgroundColor: colors.primary,
-              paddingVertical: spacing.md,
-              paddingHorizontal: spacing.xl,
-              borderRadius: spacing.lg,
-              marginTop: spacing.lg,
-            }}
-            onPress={() => setSelectedRoom(null)}
-          >
-            <Text
-              style={{
-                color: colors.white,
-                fontWeight: "bold",
-                fontSize: typography.size.md,
-              }}
-            >
-              Fechar
-            </Text>
-          </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
-      </CustomModal>
+
+        {/* SEÇÃO: RECOMENDADOS (APENAS EXPLORAÇÃO) */}
+        <View style={{ marginTop: spacing.xl }}>
+          <Text style={[global.label, { marginLeft: spacing.lg, fontSize: typography.size.xl }]}>Recomendados para Você</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={{ paddingHorizontal: spacing.lg, paddingVertical: spacing.sm }}
+          >
+            {recommendedRooms.map((room) => (
+              <RoomCard
+                key={`room-rec-${room.id}`}
+                roomName={room.nome}
+                beds={room.camaCasal + room.camaSolteiro}
+                price={room.preco}
+                imageUri={room.fotos[0]}
+                hideAddToCart={true}
+              />
+            ))}
+          </ScrollView>
+        </View>
+      </ScrollView>
+
+      {/* MODAL DE CALENDÁRIO */}
+      <Modal
+        transparent
+        animationType="fade"
+        visible={calendar !== null}
+        onRequestClose={closeCalendar}
+      >
+        <Pressable style={global.centerView} onPress={closeCalendar}>
+          <Pressable onPress={() => { }}>
+            {calendar === "checkin" && (
+              <DateSelector
+                onSelectDate={(date) => {
+                  setCheckIn(date);
+                  closeCalendar();
+                }}
+              />
+            )}
+            {calendar === "checkout" && (
+              <DateSelector
+                onSelectDate={(date) => {
+                  setCheckOut(date);
+                  closeCalendar();
+                }}
+              />
+            )}
+          </Pressable>
+        </Pressable>
+      </Modal>
     </AuthContainer>
   );
 };
