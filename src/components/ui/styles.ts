@@ -3,11 +3,11 @@ import { borderRadius, colors, dimensions, shadows, spacing, typography } from "
 
 export const global = StyleSheet.create({
     // ============================================
-    // LAYOUT
+    // LAYOUT & CONTAINERS
     // ============================================
     safeArea: {
         flex: 1,
-        backgroundColor: colors.lighter,
+        backgroundColor: colors.background,
     },
     keyboardAvoiding: {
         flex: 1
@@ -18,357 +18,173 @@ export const global = StyleSheet.create({
     },
     header: {
         alignItems: "center",
-        marginBottom: spacing.lg,
+        marginBottom: spacing.xxl,
         position: "relative"
     },
     backButton: {
         position: "absolute",
         left: 0,
         top: 0,
-        padding: spacing.sm,
-        borderRadius: borderRadius.round,
-        backgroundColor: colors.lighter,
+        padding: spacing.md,
+        borderRadius: borderRadius.md,
+        backgroundColor: colors.surface,
         ...shadows.sm
     },
     title: {
         fontSize: typography.size.title,
-        fontWeight: typography.weight.extrabold,
-        color: colors.textPrimary
+        fontWeight: typography.weight.black,
+        color: colors.textPrimary,
+        letterSpacing: -0.5
     },
     subtitle: {
-        fontSize: typography.size.lg,
-        color: colors.textSecondary,
-        marginTop: spacing.xs,
-        textAlign: "center"
-    },
-    helperText: {
         fontSize: typography.size.base,
-        color: colors.textTertiary,
-        marginTop: spacing.base,
-        textAlign: "center"
+        color: colors.textSecondary,
+        marginTop: spacing.sm,
+        textAlign: "center",
+        lineHeight: 22
     },
     content: {
-        backgroundColor: colors.white,
-        borderRadius: borderRadius.xxl,
+        backgroundColor: colors.surface,
+        borderRadius: borderRadius.xl,
         padding: spacing.xl,
-        ...shadows.lg,
-        borderWidth: 1,
-        borderColor: colors.lighter,
+        ...shadows.md,
     },
     divider: {
         height: 1,
-        width: "50%",
-        backgroundColor: colors.lavender,
-        borderRadius: borderRadius.sm,
+        width: "60%",
+        backgroundColor: colors.border,
+        borderRadius: borderRadius.round,
         alignSelf: "center",
-        marginTop: spacing.lg
-    },
-    authLinks: {
-        alignItems: "center",
-        marginTop: spacing.lg,
-        gap: spacing.base
+        marginVertical: spacing.xl
     },
     inlineLink: {
         color: colors.primary,
-        fontWeight: typography.weight.semibold,
-        fontSize: typography.size.md,
+        fontWeight: typography.weight.bold,
+        fontSize: typography.size.base,
         textAlign: "center"
     },
 
     // ============================================
-    // INPUTS
+    // INPUTS (Modern & Minimal)
     // ============================================
     inputGroup: {
-        marginBottom: spacing.base
+        marginBottom: spacing.lg
     },
     label: {
-        fontSize: typography.size.md,
-        fontWeight: typography.weight.semibold,
+        fontSize: typography.size.sm,
+        fontWeight: typography.weight.bold,
         color: colors.textPrimary,
-        marginBottom: spacing.xs
+        marginBottom: spacing.sm,
+        textTransform: "uppercase",
+        letterSpacing: 1
     },
     inputIcon: {
-        borderWidth: 1,
-        borderColor: colors.lavender,
+        borderWidth: 1.5,
+        borderColor: colors.border,
         borderRadius: borderRadius.md,
         flexDirection: "row",
         alignItems: "center",
-        paddingLeft: spacing.md,
-        backgroundColor: colors.lighter
-    },
-    inputError: {
-        backgroundColor: colors.error,
-        borderColor: colors.errorBorder
+        paddingLeft: spacing.base,
+        height: dimensions.inputHeight,
+        backgroundColor: colors.surface
     },
     input: {
         flex: 1,
-        fontSize: typography.size.lg,
+        fontSize: typography.size.base,
         color: colors.textPrimary,
         fontWeight: typography.weight.medium,
-        paddingHorizontal: spacing.md
-    },
-    inputPlaceholder: {
-        color: colors.textPlaceholder
-    },
-    eyeIcon: {
-        position: "absolute",
-        right: spacing.base,
-        top: 35
+        paddingHorizontal: spacing.sm,
+        height: "100%",
     },
     errorText: {
-        color: colors.errorText,
-        fontSize: typography.size.md,
-        marginTop: spacing.sm
+        color: colors.error,
+        fontSize: typography.size.xs,
+        marginTop: spacing.xs,
+        fontWeight: typography.weight.medium
     },
 
     // ============================================
-    // BUTTONS
+    // BUTTONS (Premium Feel)
     // ============================================
     primaryButton: {
         backgroundColor: colors.primary,
-        borderRadius: borderRadius.pill,
-        paddingVertical: dimensions.buttonPaddingVertical,
+        borderRadius: borderRadius.lg,
+        height: dimensions.buttonHeight,
         alignItems: "center",
-        marginTop: spacing.md
-    },
-    primaryButtonDisabled: {
-        backgroundColor: colors.disabled
+        justifyContent: "center",
+        ...shadows.md,
     },
     primaryButtonText: {
-        color: colors.lighter,
+        color: colors.white,
         fontWeight: typography.weight.bold,
-        fontSize: typography.size.xl
+        fontSize: typography.size.base,
+        letterSpacing: 0.5
+    },
+    outlineButton: {
+        height: dimensions.buttonHeight,
+        borderRadius: borderRadius.lg,
+        borderWidth: 2,
+        borderColor: colors.primary,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: "transparent",
+    },
+    outlineButtonText: {
+        color: colors.primary,
+        fontSize: typography.size.base,
+        fontWeight: typography.weight.bold,
     },
 
     // ============================================
-    // TABBAR
+    // TABBAR (Floating Design)
     // ============================================
     tabBar: {
         position: "absolute",
-        left: spacing.lg,
-        right: spacing.lg,
-        bottom: spacing.base,
-        backgroundColor: colors.lighter,
+        left: spacing.xl,
+        right: spacing.xl,
+        bottom: spacing.xl,
+        backgroundColor: colors.surface,
         borderRadius: borderRadius.xxl,
         height: dimensions.tabBarHeight,
-        borderWidth: 1,
-        borderColor: colors.light,
         ...shadows.lg,
-        paddingHorizontal: spacing.lg,
+        borderWidth: 0,
         paddingTop: spacing.xs,
         paddingBottom: spacing.sm
     },
     tabBarLabel: {
         fontSize: typography.size.xs,
         fontWeight: typography.weight.bold,
-        marginTop: -spacing.xs
     },
 
     // ============================================
-    // MODAL
+    // MODAL & CARDS
     // ============================================
     centerView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        paddingHorizontal: spacing.base,
-        backgroundColor: colors.overlay
+        backgroundColor: colors.overlay,
+        paddingHorizontal: spacing.xl
     },
     modalView: {
-        backgroundColor: colors.white,
-        borderRadius: borderRadius.xxxl,
+        backgroundColor: colors.surface,
+        borderRadius: borderRadius.xl,
         width: "100%",
         padding: spacing.xl,
         ...shadows.lg,
-        borderWidth: 1,
-        borderColor: colors.lighter,
     },
-
-    // ============================================
-    // DATEPICKER
-    // ============================================
-    datePickerWrapper: {
-        marginHorizontal: spacing.lg,
-        marginTop: spacing.xl,
-        gap: spacing.sm,
-    },
-    datePickerLabel: {
-        fontSize: typography.size.md,
-        fontWeight: typography.weight.semibold,
-        color: colors.textPrimary,
-    },
-    datePickerTrigger: {
-        backgroundColor: colors.white,
-        borderRadius: borderRadius.xxl,
-        borderWidth: 1,
-        borderColor: colors.light,
-        paddingHorizontal: spacing.lg,
-        paddingVertical: spacing.base,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        ...shadows.md,
-    },
-    datePickerValue: {
-        fontSize: typography.size.xxl,
-        fontWeight: typography.weight.bold,
-        color: colors.primary,
-    },
-    datePickerHint: {
-        fontSize: typography.size.sm,
-        color: colors.textTertiary,
-        marginTop: spacing.xs,
-    },
-    datePickerIconBubble: {
-        backgroundColor: colors.lighter,
-        borderRadius: spacing.lg,
-        padding: spacing.sm,
-    },
-    datePickerModalTitle: {
-        fontSize: typography.size.xxl,
-        fontWeight: typography.weight.bold,
-        color: colors.textPrimary,
-        marginBottom: spacing.md,
-    },
-    datePickerActions: {
-        flexDirection: "row",
-        justifyContent: "flex-end",
-        gap: spacing.md,
-        width: "100%",
-        marginTop: spacing.base,
-    },
-    datePickerGhostButton: {
-        paddingHorizontal: spacing.base,
-        paddingVertical: spacing.sm,
-    },
-    datePickerGhostText: {
-        color: colors.primary,
-        fontWeight: typography.weight.semibold,
-    },
-    datePickerPrimaryButton: {
-        backgroundColor: colors.primary,
-        borderRadius: borderRadius.xxl,
-        paddingHorizontal: spacing.xl,
-        paddingVertical: spacing.sm,
-    },
-    datePickerPrimaryText: {
-        color: colors.lighter,
-        fontWeight: typography.weight.bold,
-    },
-
-    // ============================================
-    // INFO RESERVA
-    // ============================================
     infoReservaContainer: {
-        backgroundColor: colors.white,
-        borderRadius: borderRadius.xl,
+        backgroundColor: colors.surface,
+        borderRadius: borderRadius.lg,
         padding: spacing.lg,
         marginTop: spacing.base,
-        ...shadows.md,
-    },
-    infoReservaHeader: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: spacing.sm,
-        marginBottom: spacing.base,
-        paddingBottom: spacing.base,
-        borderBottomWidth: 1,
-        borderBottomColor: colors.light,
+        ...shadows.sm,
+        borderWidth: 1,
+        borderColor: colors.border
     },
     infoReservaTitle: {
-        fontSize: typography.size.lg,
+        fontSize: typography.size.md,
         fontWeight: typography.weight.bold,
         color: colors.textPrimary,
     },
-    infoReservaContent: {
-        gap: spacing.sm,
-    },
-    infoReservaRow: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-        paddingVertical: spacing.xs,
-    },
-    infoReservaLabelContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        gap: spacing.sm,
-        flex: 1,
-    },
-    infoReservaLabel: {
-        fontSize: typography.size.md,
-        fontWeight: typography.weight.medium,
-        color: colors.textTertiary,
-    },
-    infoReservaValue: {
-        fontSize: typography.size.md,
-        fontWeight: typography.weight.semibold,
-        color: colors.textPrimary,
-        textAlign: "right",
-        flex: 1,
-    },
-    infoReservaPrice: {
-        fontSize: typography.size.lg,
-        fontWeight: typography.weight.bold,
-        color: colors.primary,
-    },
-    infoReservaDivider: {
-        height: 1,
-        backgroundColor: colors.light,
-        marginVertical: spacing.xs,
-    },
-
-
-    // ============================================
-    // ACCOUNT/PERFIL
-    // ============================================
-
-    outlineButton: {
-        paddingVertical: dimensions.buttonPaddingVertical,
-        paddingHorizontal: dimensions.buttonPaddingHorizontal,
-        borderRadius: borderRadius.pill,
-        borderWidth: 1.5,
-        borderColor: colors.primary,
-        alignItems: "center",
-        justifyContent: "center",
-        backgroundColor: colors.white,
-        ...shadows.sm,
-    },
-    outlineButtonText: {
-        color: colors.primary,
-        fontSize: typography.size.md,
-        fontWeight: typography.weight.bold,
-    },
-    modalButtons: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginTop: spacing.xl,
-        gap: spacing.md,
-    },
-    modalButton: {
-        flex: 1,
-        height: dimensions.buttonHeight,
-        borderRadius: borderRadius.pill,
-        alignItems: "center",
-        justifyContent: "center",
-        ...shadows.sm,
-    },
-    cancelButton: {
-        backgroundColor: colors.white,
-        borderWidth: 1,
-        borderColor: colors.disabled,
-    },
-    saveButton: {
-        backgroundColor: colors.primary,
-    },
-    cancelButtonText: {
-        color: colors.textTertiary,
-        fontWeight: typography.weight.semibold,
-    },
-    saveButtonText: {
-        color: colors.white,
-        fontWeight: typography.weight.bold,
-    },
-
-
 });

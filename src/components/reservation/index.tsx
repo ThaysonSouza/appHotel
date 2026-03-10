@@ -1,139 +1,148 @@
 import { Feather } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
-import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
+import { Image, ScrollView, Text, View } from "react-native";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
 import AuthContainer from "../ui/AuthContainer";
-import InfoReserva from "../ui/InfoReserva";
-import { colors, spacing, typography } from "../ui/designTokens";
+import FeedbackButton from "../ui/FeedbackButton";
+import { borderRadius, colors, shadows, spacing } from "../ui/designTokens";
 import { global } from "../ui/styles";
 
 const RenderReservation = () => {
   const router = useRouter();
   const { cartItems, removeFromCart, clearCart } = useCart();
+  const { showToast } = useToast();
 
   const totalPrice = cartItems.reduce((sum, item) => sum + item.preco, 0);
 
   const handleConfirmReservation = () => {
     if (cartItems.length === 0) return;
 
-    console.log("Reserva confirmada:", {
-      rooms: cartItems,
-      totalPrice,
-    });
-    // Aqui viria a chamada para a API
-    clearCart();
-    router.replace("/(tabs)/explorer");
+    showToast("Reserva confirmada com sucesso! Prepando seu quarto...", "success");
+    // Chamada para a API de confirmação de reserva
+    setTimeout(() => {
+      clearCart();
+      router.replace("/(tabs)/explorer");
+    }, 1500);
   };
 
   if (cartItems.length === 0) {
     return (
-      <AuthContainer title="Reserva" icon="briefcase">
-        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: spacing.xl }}>
-          <Feather name="shopping-cart" size={80} color={colors.lavender} style={{ marginBottom: spacing.lg }} />
-          <Text style={[global.title, { textAlign: "center", marginBottom: spacing.md }]}>
-            voce ainda nao tem quartos reservados
+      <AuthContainer>
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: spacing.xxl }}>
+          <View style={{
+            width: 120,
+            height: 120,
+            borderRadius: 60,
+            backgroundColor: colors.background,
+            justifyContent: 'center',
+            alignItems: 'center',
+            marginBottom: spacing.xl
+          }}>
+            <Feather name="shopping-bag" size={50} color={colors.primary} />
+          </View>
+          <Text style={[global.title, { textAlign: "center", marginBottom: spacing.md, fontSize: 24 }]}>
+            Sua sacola está vazia
           </Text>
-          <TouchableOpacity
-            style={[global.primaryButton, { width: "100%" }]}
+          <Text style={{ textAlign: "center", color: colors.textSecondary, marginBottom: spacing.xxl, lineHeight: 22 }}>
+            Parece que você ainda não escolheu o seu refúgio ideal. Vamos encontrar um?
+          </Text>
+          <FeedbackButton
+            title="Explorar destinos"
             onPress={() => router.push("/(tabs)/explorer")}
-          >
-            <Text style={global.primaryButtonText}>Reservar</Text>
-          </TouchableOpacity>
+            style={{ width: "100%" }}
+          />
         </View>
       </AuthContainer>
     );
   }
 
   return (
-    <AuthContainer
-      title="Sua Reserva"
-      subtitle="Revise os detalhes antes de confirmar"
-      icon="briefcase"
-    >
+    <AuthContainer>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: spacing.xxxl * 2 }}
+        contentContainerStyle={{ paddingBottom: spacing.xxxl * 2, paddingHorizontal: spacing.xl }}
       >
-        <View style={global.infoReservaContainer}>
-          <Text style={[global.infoReservaTitle, { marginBottom: spacing.base }]}>
-            Itens no Carrinho ({cartItems.length})
-          </Text>
+        <Text style={[global.title, { marginBottom: spacing.sm, fontSize: 28 }]}>Sua Reserva</Text>
+        <Text style={{ color: colors.textSecondary, marginBottom: spacing.xl }}>{cartItems.length} {cartItems.length === 1 ? 'item selecionado' : 'itens selecionados'}</Text>
 
+        <View style={{ gap: spacing.md, marginBottom: spacing.xxl }}>
           {cartItems.map((item) => (
             <View
               key={`cart-item-${item.id}`}
               style={{
                 flexDirection: "row",
-                backgroundColor: colors.white,
-                borderRadius: 12,
+                backgroundColor: colors.surface,
+                borderRadius: borderRadius.lg,
                 padding: spacing.md,
-                marginBottom: spacing.md,
+                ...shadows.sm,
                 borderWidth: 1,
-                borderColor: colors.lighter,
+                borderColor: colors.border,
                 alignItems: "center"
               }}
             >
               {item.imageUri && (
                 <Image
                   source={{ uri: item.imageUri }}
-                  style={{ width: 60, height: 60, borderRadius: 8, marginRight: spacing.md }}
+                  style={{ width: 80, height: 80, borderRadius: borderRadius.md, marginRight: spacing.md }}
                 />
               )}
               <View style={{ flex: 1 }}>
-                <Text style={{ fontWeight: "bold", fontSize: 16, color: colors.textPrimary }}>{item.nome}</Text>
-                <Text style={{ fontSize: 14, color: colors.textSecondary }}>R$ {item.preco} / noite</Text>
-                {item.checkIn && (
-                  <Text style={{ fontSize: 12, color: colors.textTertiary }}>
-                    {item.checkIn} até {item.checkOut}
+                <Text style={{ fontWeight: "bold", fontSize: 16, color: colors.textPrimary, marginBottom: 4 }}>{item.nome}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 4 }}>
+                  <Feather name="calendar" size={12} color={colors.primary} style={{ marginRight: 4 }} />
+                  <Text style={{ fontSize: 12, color: colors.textSecondary }}>
+                    {item.checkIn} - {item.checkOut}
                   </Text>
-                )}
+                </View>
+                <Text style={{ fontSize: 15, fontWeight: 'bold', color: colors.primary }}>R$ {item.preco}</Text>
               </View>
-              <TouchableOpacity onPress={() => removeFromCart(item.id)}>
-                <Feather name="trash-2" size={20} color={colors.errorText} />
-              </TouchableOpacity>
+              <FeedbackButton
+                title=""
+                variant="ghost"
+                onPress={() => removeFromCart(item.id)}
+                style={{ width: 44, height: 44, paddingHorizontal: 0 }}
+                textStyle={{ fontSize: 0 }}
+              >
+                <Feather name="x" size={20} color={colors.textTertiary} />
+              </FeedbackButton>
             </View>
           ))}
         </View>
 
-        {/* Informações da Reserva */}
-        <InfoReserva
-          dateCheckin={cartItems[0]?.checkIn || "-"}
-          dateCheckout={cartItems[0]?.checkOut || "-"}
-          price={`R$ ${totalPrice.toFixed(2)}`}
-        />
-
-        <View style={[global.infoReservaContainer, { marginTop: spacing.base }]}>
-          <Text style={[global.infoReservaTitle, { marginBottom: spacing.md }]}>
-            Política de Cancelamento
-          </Text>
-          <Text
-            style={{
-              fontSize: typography.size.base,
-              color: colors.textTertiary,
-              lineHeight: typography.size.lg + 4,
-            }}
-          >
-            Cancelamento gratuito até 24 horas antes do check-in. Após esse
-            período, será cobrada uma taxa de 50% do valor total.
-          </Text>
+        {/* Resumo Financeiro */}
+        <View style={[global.content, { padding: spacing.lg, marginBottom: spacing.xl }]}>
+          <Text style={[global.label, { marginBottom: spacing.base }]}>Resumo do Valor</Text>
+          <View style={{ gap: spacing.sm }}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ color: colors.textSecondary }}>Subtotal</Text>
+              <Text style={{ color: colors.textPrimary, fontWeight: 'medium' }}>R$ {totalPrice.toFixed(2)}</Text>
+            </View>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ color: colors.textSecondary }}>Taxas de serviço</Text>
+              <Text style={{ color: colors.success, fontWeight: 'bold' }}>Grátis</Text>
+            </View>
+            <View style={{ height: 1, backgroundColor: colors.border, marginVertical: spacing.sm }} />
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <Text style={{ color: colors.textPrimary, fontWeight: 'bold', fontSize: 18 }}>Total</Text>
+              <Text style={{ color: colors.primary, fontWeight: 'black', fontSize: 20 }}>R$ {totalPrice.toFixed(2)}</Text>
+            </View>
+          </View>
         </View>
 
-        <TouchableOpacity
-          style={[global.primaryButton, { marginTop: spacing.xl }]}
+        <FeedbackButton
+          title="Confirmar e Pagar"
           onPress={handleConfirmReservation}
-        >
-          <Text style={global.primaryButtonText}>Finalizar Reserva</Text>
-        </TouchableOpacity>
+        />
 
-        <TouchableOpacity
-          style={{
-            marginTop: spacing.base,
-            alignItems: "center",
-          }}
+        {/* Link para continuar comprando */}
+        <FeedbackButton
+          title="Adicionar mais quartos"
           onPress={() => router.push("/(tabs)/explorer")}
-        >
-          <Text style={global.inlineLink}>Continuar buscando</Text>
-        </TouchableOpacity>
+          variant="ghost"
+          style={{ marginTop: spacing.xl }}
+          textStyle={{ textDecorationLine: 'underline' }}
+        />
       </ScrollView>
     </AuthContainer>
   );

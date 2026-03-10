@@ -1,32 +1,45 @@
 import { StyleSheet } from "react-native";
-import { borderRadius, colors, dimensions, shadows, spacing, typography } from "./designTokens";
+import { borderRadius, colors, shadows, spacing, typography } from "./designTokens";
 
 export const stylesRoom = StyleSheet.create({
-
   container: {
-    width: dimensions.cardWidth,
-    backgroundColor: colors.white,
-    borderRadius: borderRadius.lg,
+    width: 280, // Larger for modern feel
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.xl,
     overflow: "hidden",
-    marginRight: spacing.base,
+    marginRight: spacing.xl,
     ...shadows.md,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   image: {
     width: "100%",
-    height: dimensions.cardImageHeight,
+    height: 160,
   },
   infoSection: {
-    padding: dimensions.cardPadding,
-    gap: spacing.xs,
+    padding: spacing.lg,
+    gap: spacing.sm,
   },
   title: {
-    fontSize: typography.size.lg,
+    fontSize: typography.size.md,
     fontWeight: typography.weight.bold,
     color: colors.textPrimary,
+    lineHeight: 24,
+  },
+  priceContainer: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    marginTop: spacing.xs,
   },
   price: {
     fontSize: typography.size.base,
+    fontWeight: typography.weight.black,
+    color: colors.primary,
+  },
+  perNight: {
+    fontSize: typography.size.xs,
     color: colors.textTertiary,
+    marginLeft: spacing.xs,
   },
   beds: {
     fontSize: typography.size.sm,

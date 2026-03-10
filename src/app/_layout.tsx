@@ -1,12 +1,15 @@
 import AuthProvider from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
+import { ToastProvider } from "@/context/ToastContext";
 import { Stack } from "expo-router";
 
 const RootLayout = () => {
     return (
         <AuthProvider>
             <CartProvider>
-                <Stack screenOptions={{ headerShown: false }} />
+                <ToastProvider>
+                    <Stack screenOptions={{ headerShown: false }} />
+                </ToastProvider>
             </CartProvider>
         </AuthProvider>
     );

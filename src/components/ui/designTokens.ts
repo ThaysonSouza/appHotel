@@ -1,33 +1,35 @@
-// PALETA DE CORES
+// PALETA DE CORES PREMIUM
 export const colors = {
-  // Cores principais (Roxo/Lilás)
-  deepPurple: "#49225B",      // Títulos, textos principais
-  primary: "#6E3482",         // Botões, links, ícones ativos
-  lavender: "#A56ABD",        // Bordas, placeholders
-  light: "#E7DBEF",           // Cards, backgrounds secundários
-  lighter: "#F5EBFA",         // Background principal, inputs
-  
-  // Cores neutras
+  // Cores de Marca (Midnight Lavender)
+  primary: "#6D28D9",         // Roxo Vibrante (Moderno)
+  primaryDark: "#4C1D95",     // Roxo Profundo para estados pressed
+  secondary: "#10B981",       // Esmeralda para sucesso/confirmação (Airbnb style)
+  accent: "#F59E0B",          // Âmbar para destaques/estrelas
+
+  // Escala de Cinzas (Neutros)
+  background: "#F9FAFB",      // Fundo super limpo
+  surface: "#FFFFFF",         // Superfície de cards e modais
+  border: "#E5E7EB",          // Bordas sutis
+  borderFocus: "#C4B5FD",     // Borda ao focar input
+
+  // Cores de Texto
+  textPrimary: "#111827",     // Quase preto para leitura máxima
+  textSecondary: "#4B5563",   // Cinza escuro para descrições
+  textTertiary: "#9CA3AF",    // Cinza claro para labels e hints
   white: "#FFFFFF",
-  black: "#000000",
-  
-  // Cores de estado
-  error: "#fed5d5ff",
-  errorBorder: "rgba(139, 0, 0, 1)",
-  errorText: "red",
-  disabled: "#9ca3af",
-  
-  // Cores de overlay
-  overlay: "rgba(0,0,0,0.35)",
-  
-  // Cores de texto
-  textPrimary: "#49225B",
-  textSecondary: "#6E3482",
-  textTertiary: "#7A6A8C",
-  textPlaceholder: "#A56ABD",
+
+  // Estados
+  error: "#EF4444",
+  success: "#10B981",
+  warning: "#F59E0B",
+  disabled: "#D1D5DB",
+
+  // Overlay
+  overlay: "rgba(0, 0, 0, 0.45)",
+  lightOverlay: "rgba(255, 255, 255, 0.9)",
 } as const;
 
-//ESPAÇAMENTOS
+// ESPAÇAMENTOS (Base 4)
 export const spacing = {
   xs: 4,
   sm: 8,
@@ -36,96 +38,75 @@ export const spacing = {
   lg: 20,
   xl: 24,
   xxl: 32,
-  xxxl: 40,
+  xxxl: 48,
 } as const;
 
-// TIPOGRAFIA HIERÁRQUICA
+// TIPOGRAFIA (Inter style)
 export const typography = {
-  // Tamanhos de fonte
   size: {
     xs: 12,
-    sm: 13,
-    base: 14,
-    md: 15,
-    lg: 16,
-    xl: 17,
-    xxl: 18,
-    title: 26,
+    sm: 14,
+    base: 16,
+    md: 18,
+    lg: 20,
+    xl: 24,
+    xxl: 28,
+    title: 32,
   },
-  
-  // Pesos de fonte
   weight: {
     regular: "400",
     medium: "500",
     semibold: "600",
     bold: "700",
-    extrabold: "800",
+    black: "900",
   },
 } as const;
 
-// BORDAS
+// BORDAS (Mais arredondadas)
 export const borderRadius = {
-  sm: 10,
+  none: 0,
+  sm: 8,
   md: 12,
   lg: 16,
-  xl: 18,
-  xxl: 24,
-  xxxl: 28,
-  pill: 30,
-  round: 999,
+  xl: 24,
+  xxl: 32,
+  round: 9999,
 } as const;
 
-//SOMBRAS
+// SOMBRAS (Elevations Modernas)
 export const shadows = {
   sm: {
-    shadowColor: colors.deepPurple,
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 2,
   },
   md: {
-    shadowColor: colors.deepPurple,
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
+    shadowColor: "#000",
     shadowOffset: { width: 0, height: 4 },
-    elevation: 4,
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   lg: {
-    shadowColor: colors.deepPurple,
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.15,
+    shadowRadius: 20,
+    elevation: 10,
   },
 } as const;
 
-// DIMENSÕES FIXAS (para componentes)
+// DIMENSÕES
 export const dimensions = {
-  // Botões
-  buttonHeight: 48,
-  buttonPaddingVertical: 14,
-  buttonPaddingHorizontal: 22,
-  
-  // Inputs
-  inputHeight: 48,
-  inputPaddingHorizontal: 12,
-  inputIconSize: 23,
-  
-  // Cards
-  cardWidth: 200,
-  cardImageHeight: 130,
-  cardPadding: 12,
-  
-  // TabBar
-  tabBarHeight: 68,
-  tabBarIconSize: 24,
-  
-  // Ícones
+  buttonHeight: 56,
+  inputHeight: 56,
+  tabBarHeight: 75,
   iconSize: {
-    sm: 20,
-    md: 23,
-    lg: 30,
+    sm: 18,
+    md: 24,
+    lg: 32,
   },
 } as const;
 

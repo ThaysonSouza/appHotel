@@ -1,10 +1,12 @@
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Modal, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Modal, Text, View } from "react-native";
 import { formatWithMask } from "react-native-mask-input";
+import { useToast } from "../../context/ToastContext";
 import AuthContainer from "../ui/AuthContainer";
-import { colors, spacing } from "../ui/designTokens";
+import { colors, shadows, spacing } from "../ui/designTokens";
+import FeedbackButton from "../ui/FeedbackButton";
 import PasswordField from "../ui/PasswordField";
 import { global } from "../ui/styles";
 import TextField from "../ui/textField";
@@ -16,6 +18,7 @@ const PHONE_MASK = ["(", /\d/, /\d/, ")", " ", /\d/, /\d/, /\d/, /\d/, /\d/, "-"
 const RenderAccount = () => {
   const { signOut, getUserProfile, updatePassword, updateProfile, isLoading: isLoadingAuth } = useAuth();
   const router = useRouter();
+  const { showToast } = useToast();
 
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
@@ -42,7 +45,7 @@ const RenderAccount = () => {
         setCpf(maskedCpf);
         setPhone(maskedPhone);
       } catch (error: any) {
-        Alert.alert("Erro", "Não foi possível carregar os dados do perfil.");
+        showToast("Não foi possível carregar os dados do perfil.", "error");
         console.error(error);
       } finally {
         setLoading(false);
@@ -64,16 +67,16 @@ const RenderAccount = () => {
 
   const handleUpdateData = async () => {
     if (!name || !email || !phone) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+      showToast("Por favor, preencha todos os campos.", "error");
       return;
     }
 
     try {
       setLoading(true);
       await updateProfile(name, email, phone);
-      Alert.alert("Sucesso", "Dados atualizados com sucesso!");
+      showToast("Dados atualizados com sucesso!", "success");
     } catch (error: any) {
-      Alert.alert("Erro", error.message || "Erro ao atualizar dados.");
+      showToast(error.message || "Erro ao atualizar dados.", "error");
     } finally {
       setLoading(false);
     }
@@ -81,52 +84,66 @@ const RenderAccount = () => {
 
   const handleUpdatePassword = async () => {
     if (!oldPassword || !newPassword || !confirmPassword) {
-      Alert.alert("Erro", "Preencha todos os campos.");
+      showToast("Preencha todos os campos.", "error");
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert("Erro", "As senhas não coincidem.");
+      showToast("As senhas não coincidem.", "error");
       return;
     }
 
     try {
       await updatePassword(oldPassword, newPassword);
-      Alert.alert("Sucesso", "Senha alterada com sucesso!");
+      showToast("Senha alterada com sucesso!", "success");
       setModalVisible(false);
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
     } catch (error: any) {
-      Alert.alert("Erro", error.message || "Erro ao atualizar senha.");
+      showToast(error.message || "Erro ao atualizar senha.", "error");
     }
   };
 
   return (
-    <AuthContainer
-      title="Minha Conta"
-      subtitle="Gerencie suas informações"
-      icon="user"
-    >
-      <View style={global.content}>
+    <AuthContainer>
+      <View style={{ alignItems: 'center', marginBottom: spacing.xxl }}>
+        <View style={{
+          width: 100,
+          height: 100,
+          borderRadius: 50,
+          backgroundColor: colors.primary,
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginBottom: spacing.md,
+          ...shadows.md
+        }}>
+          <Text style={{ fontSize: 40, fontWeight: 'bold', color: colors.white }}>
+            {name.charAt(0).toUpperCase()}
+          </Text>
+        </View>
+        <Text style={[global.title, { fontSize: 24 }]}>{name}</Text>
+        <Text style={{ color: colors.textSecondary }}>{email}</Text>
+      </View>
+
+      <View style={[global.content, { marginBottom: spacing.xxxl }]}>
+        <Text style={[global.label, { marginBottom: spacing.lg }]}>Informações Pessoais</Text>
+
         <TextField
-          label="Nome"
+          label="Nome Completo"
           value={name}
           onChangeText={setName}
           icon={{ lib: "MaterialIcons", name: "person" }}
           placeholder="Seu nome completo"
         />
 
-        {/* CPF */}
         <TextField
           label="CPF"
           value={cpf}
           editable={false}
           icon={{ lib: "MaterialIcons", name: "badge" }}
-          style={{ backgroundColor: colors.light, opacity: 0.7 }}
+          style={{ backgroundColor: colors.background }}
         />
-
-        {/* TELEFONE COM TEXTFIELD */}
 
         <TextField
           label="Telefone"
@@ -153,33 +170,33 @@ const RenderAccount = () => {
           autoCapitalize="none"
         />
 
-        <TouchableOpacity
-          style={[global.primaryButton, { marginTop: spacing.md }]}
+        <FeedbackButton
+          title="Atualizar Perfil"
           onPress={handleUpdateData}
-        >
-          <Text style={global.primaryButtonText}>Salvar Alterações</Text>
-        </TouchableOpacity>
+          style={{ marginTop: spacing.md }}
+        />
 
         <View style={global.divider} />
 
-        <TouchableOpacity
-          style={[global.outlineButton, { marginTop: spacing.lg }]}
-          onPress={() => setModalVisible(true)}
-        >
-          <Text style={global.outlineButtonText}>Alterar senha</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[global.outlineButton, { marginTop: spacing.lg }]}
-          onPress={async () => {
-            await signOut();
-            router.replace("/(auth)");
-          }}
-        >
-          <Text style={global.outlineButtonText}>Sair</Text>
-        </TouchableOpacity>
-      </View>
+        <View style={{ gap: spacing.md }}>
+          <FeedbackButton
+            title="Alterar minha senha"
+            onPress={() => setModalVisible(true)}
+            variant="outline"
+          />
 
-      {/* MODAL */}
+          <FeedbackButton
+            title="Sair da conta"
+            onPress={async () => {
+              await signOut();
+              router.replace("/(auth)");
+            }}
+            variant="outline"
+            style={{ borderColor: colors.error }}
+            textStyle={{ color: colors.error }}
+          />
+        </View>
+      </View>
 
       <Modal
         animationType="fade"
@@ -189,22 +206,12 @@ const RenderAccount = () => {
       >
         <View style={global.centerView}>
           <View style={global.modalView}>
-            <Text
-              style={[
-                global.title,
-                {
-                  fontSize: 20,
-                  marginBottom: spacing.base,
-                  textAlign: "center",
-                },
-              ]}
-            >
-              {" "}
-              Alterar Senha{" "}
+            <Text style={[global.title, { fontSize: 22, marginBottom: spacing.xl, textAlign: "center" }]}>
+              Nova Senha
             </Text>
 
             <PasswordField
-              label="Senha Antiga"
+              label="Senha Atual"
               value={oldPassword}
               onChangeText={setOldPassword}
               icon={{ lib: "MaterialIcons", name: "lock" }}
@@ -220,27 +227,30 @@ const RenderAccount = () => {
             />
 
             <PasswordField
-              label="Confirmar Nova Senha"
+              label="Confirmar"
               value={confirmPassword}
               onChangeText={setConfirmPassword}
               icon={{ lib: "MaterialIcons", name: "lock-outline" }}
               placeholder="********"
             />
 
-            <View style={global.modalButtons}>
-              <TouchableOpacity
-                style={[global.modalButton, global.cancelButton]}
-                onPress={() => setModalVisible(false)}
-              >
-                <Text style={global.cancelButtonText}>Cancelar</Text>
-              </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: spacing.md, marginTop: spacing.xl }}>
+              <View style={{ flex: 1 }}>
+                <FeedbackButton
+                  title="Cancelar"
+                  onPress={() => setModalVisible(false)}
+                  variant="outline"
+                  style={{ borderColor: colors.border }}
+                  textStyle={{ color: colors.textSecondary }}
+                />
+              </View>
 
-              <TouchableOpacity
-                style={[global.modalButton, global.saveButton]}
-                onPress={handleUpdatePassword}
-              >
-                <Text style={global.saveButtonText}>Confirmar</Text>
-              </TouchableOpacity>
+              <View style={{ flex: 1 }}>
+                <FeedbackButton
+                  title="Confirmar"
+                  onPress={handleUpdatePassword}
+                />
+              </View>
             </View>
           </View>
         </View>

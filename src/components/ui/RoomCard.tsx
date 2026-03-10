@@ -2,23 +2,25 @@ import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { ActivityIndicator, Image, Text, TouchableOpacity, View } from "react-native";
 import { useCart } from "../../context/CartContext";
+import { useToast } from "../../context/ToastContext";
 import CustomModal from "./CustomModal";
-import { colors } from "./designTokens";
+import FeedbackButton from "./FeedbackButton";
+import { borderRadius, colors, spacing, typography } from "./designTokens";
 import { stylesRoom } from "./stylesRoom";
 
 type RoomCardProps = {
   onPress?: () => void;
   id?: number;
-  roomName?: string;
-  price?: string | number;
+  roomName: string;
+  price: string | number;
   imageUri?: string;
-  beds?: number;
+  beds: number;
   amenities?: string[];
   description?: string;
   hideAddToCart?: boolean;
 };
 
-const RenderRoomCard = ({
+const RoomCard = ({
   onPress,
   id,
   roomName = "Suite Junior",
@@ -29,12 +31,14 @@ const RenderRoomCard = ({
   description = "Uma suíte confortável e elegante, perfeita para sua estadia. Com decoração moderna e todas as comodidades que você precisa.",
   hideAddToCart = false
 }: RoomCardProps) => {
-  const [showDetails, setShowDetails] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [imageError, setImageError] = useState(false);
   const router = useRouter();
   const { addToCart, searchDates } = useCart();
+  const { showToast } = useToast();
 
+  // Definição de URLs de imagem
   const defaultImageUri = require("../../../assets/images/suiteJunior.jpg");
   const remoteImageUri = imageUri || "https://images.unsplash.com/photo-1505691938895-1758d7feb511";
 
@@ -42,7 +46,7 @@ const RenderRoomCard = ({
     if (onPress) {
       onPress();
     } else {
-      setShowDetails(true);
+      setModalVisible(true);
     }
   };
 
@@ -51,13 +55,13 @@ const RenderRoomCard = ({
       addToCart({
         id,
         nome: roomName,
-        preco: typeof price === 'string' ? parseFloat(price.replace('R$ ', '')) : price,
+        preco: typeof price === 'string' ? parseFloat(price.replace('R$ ', '')) : Number(price),
         imageUri: remoteImageUri,
         checkIn: searchDates.checkIn,
         checkOut: searchDates.checkOut,
       });
-      setShowDetails(false);
-      router.push("/(tabs)/reservation");
+      showToast(`${roomName} adicionado à reserva!`, "success");
+      setModalVisible(false);
     }
   };
 
@@ -70,7 +74,6 @@ const RenderRoomCard = ({
   };
 
   const handleImageError = () => {
-    console.warn("Erro ao carregar imagem remota, usando imagem local");
     setImageError(true);
     setIsLoading(false);
   };
@@ -81,10 +84,10 @@ const RenderRoomCard = ({
         style={stylesRoom.container}
         onPress={handlePress}
         activeOpacity={0.85}>
-        <View style={{ position: "relative", width: "100%", height: 130 }}>
+        <View style={{ width: "100%", height: 160, overflow: "hidden" }}>
           <Image
             source={imageError ? defaultImageUri : { uri: remoteImageUri }}
-            style={stylesRoom.image}
+            style={{ width: "100%", height: "100%" }}
             onLoadStart={handleImageLoadStart}
             onLoadEnd={handleImageLoadEnd}
             onError={handleImageError}
@@ -106,55 +109,62 @@ const RenderRoomCard = ({
         </View>
 
         <View style={stylesRoom.infoSection}>
-          <Text style={stylesRoom.title}>{roomName}</Text>
-          <Text style={stylesRoom.price}>R$ {price} por noite</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Text style={stylesRoom.title} numberOfLines={1}>{roomName}</Text>
+            <Text style={{ color: colors.accent, fontWeight: 'bold' }}>★ 4.8</Text>
+          </View>
+
           <Text style={stylesRoom.beds}>{beds} {beds === 1 ? 'cama' : 'camas'}</Text>
+
+          <View style={stylesRoom.priceContainer}>
+            <Text style={stylesRoom.price}>R$ {price}</Text>
+            <Text style={stylesRoom.perNight}>/ noite</Text>
+          </View>
         </View>
       </TouchableOpacity>
 
       <CustomModal
-        visible={showDetails}
-        onClose={() => setShowDetails(false)}
-        title="Detalhes do Quarto"
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        title="Detalhes da Unidade"
       >
-        <View style={{ padding: 20 }}>
+        <View style={{ padding: spacing.xl }}>
           <Image
             source={imageError ? defaultImageUri : { uri: remoteImageUri }}
-            style={{ width: "100%", height: 200, borderRadius: 10, marginBottom: 15 }}
+            style={{ width: "100%", height: 250, borderRadius: borderRadius.lg, marginBottom: spacing.lg }}
             resizeMode="cover"
           />
 
-          <Text style={{ fontSize: 16, marginBottom: 10, textAlign: "center", fontWeight: "bold", color: colors.primary }}>
-            {roomName}
-          </Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: spacing.sm }}>
+            <Text style={{ fontSize: typography.size.lg, fontWeight: "bold", color: colors.textPrimary }}>
+              {roomName}
+            </Text>
+            <View style={{ backgroundColor: colors.background, paddingHorizontal: 8, paddingVertical: 4, borderRadius: 4 }}>
+              <Text style={{ color: colors.accent, fontWeight: 'bold' }}>★ 4.8</Text>
+            </View>
+          </View>
 
-          <Text style={{ fontSize: 14, marginBottom: 15, textAlign: "center", color: colors.textSecondary }}>
+          <Text style={{ fontSize: typography.size.sm, color: colors.textSecondary, marginBottom: spacing.base, lineHeight: 22 }}>
             {description}
           </Text>
 
-          <Text style={{ fontSize: 16, marginBottom: 10, textAlign: "center", fontWeight: "semibold" }}>
-            Comodidades:
+          <Text style={{ fontSize: typography.size.base, fontWeight: "bold", marginBottom: spacing.sm }}>
+            O que este lugar oferece:
           </Text>
 
-          <Text style={{ fontSize: 14, lineHeight: 20, textAlign: "center", color: colors.textTertiary }}>
-            {amenities.join(' • ')}
-          </Text>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8, marginBottom: spacing.xl }}>
+            {amenities.map((item, idx) => (
+              <View key={idx} style={{ backgroundColor: colors.background, padding: 8, borderRadius: 8 }}>
+                <Text style={{ fontSize: 12, color: colors.textSecondary }}>{item}</Text>
+              </View>
+            ))}
+          </View>
 
           {!hideAddToCart && (
-            <TouchableOpacity
-              style={{
-                backgroundColor: colors.primary,
-                padding: 15,
-                borderRadius: 10,
-                alignItems: "center",
-                marginTop: 20
-              }}
+            <FeedbackButton
+              title="Adicionar à Reserva"
               onPress={handleAddToCart}
-            >
-              <Text style={{ color: "white", fontWeight: "bold" }}>
-                Adicionar ao Carrinho
-              </Text>
-            </TouchableOpacity>
+            />
           )}
         </View>
       </CustomModal>
@@ -162,4 +172,4 @@ const RenderRoomCard = ({
   );
 };
 
-export default RenderRoomCard;
+export default RoomCard;

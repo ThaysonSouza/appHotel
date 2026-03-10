@@ -1,9 +1,12 @@
 import { Feather, FontAwesome6 } from "@expo/vector-icons";
 import React from "react";
 import {
-  KeyboardAvoidingView, Platform, ScrollView, Text, TouchableOpacity, View, } from "react-native";
+  KeyboardAvoidingView, Platform, ScrollView, Text,
+  View
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, dimensions } from "./designTokens";
+import FeedbackButton from "./FeedbackButton";
+import { colors, dimensions, spacing } from "./designTokens";
 import { global } from "./styles";
 
 type Props = {
@@ -21,18 +24,22 @@ const AuthContainer = ({ title, subtitle, icon, children, onBack }: Props) => {
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         style={global.keyboardAvoiding}
       >
-        <ScrollView 
+        <ScrollView
           contentContainerStyle={[global.container, { flexGrow: 1 }]}
           showsVerticalScrollIndicator={false}>
           <View style={global.header}>
             {onBack && (
-              <TouchableOpacity style={global.backButton} onPress={onBack}>
-                <Feather name="chevron-left" size={dimensions.iconSize.sm} color={colors.primary} />
-              </TouchableOpacity>
+              <FeedbackButton
+                variant="ghost"
+                onPress={onBack}
+                style={{ width: 44, height: 44, paddingHorizontal: 0, justifyContent: 'center', marginLeft: -spacing.sm }}
+              >
+                <Feather name="chevron-left" size={dimensions.iconSize.md} color={colors.primary} />
+              </FeedbackButton>
             )}
-            {!!icon && <FontAwesome6 name={icon} size={dimensions.iconSize.lg} color={colors.primary} />}   
+            {!!icon && <FontAwesome6 name={icon} size={dimensions.iconSize.lg} color={colors.primary} />}
             {!!title && <Text style={global.title}>{title}</Text>}
-            {!!subtitle && <Text style={global.subtitle}>{subtitle}</Text>}     
+            {!!subtitle && <Text style={global.subtitle}>{subtitle}</Text>}
 
           </View>
           <View style={{ flex: 1 }}>{children}</View> {/* Retirada a estilização global.content para não impactar no
